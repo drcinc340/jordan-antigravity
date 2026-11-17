@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Antigravity" />
+  <meta name="theme-color" content="#080d14" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <title>Antigravity AI — Jordan Culliver</title>
+  <style>
+    :root {
+      --bg-0: #080c14;
+      --bg-1: #0f1624;
+      --bg-2: #162033;
+      --bg-3: #1e2b44;
+      --border: rgba(148, 163, 184, 0.16);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #059669;
+      --accent-2: #2563eb;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+      background: var(--bg-0);
+      color: var(--text);
+      overflow: hidden;
+    }
+    /* Lock Screen */
+    #authScreen {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.22), transparent 55%), var(--bg-0);
+      padding: 20px;
+    }
+    .auth-card {
+      width: 100%; max-width: 400px;
+      background: rgba(15, 22, 36, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      text-align: center;
+      backdrop-filter: blur(16px);
+    }
+    .brand-orb {
+      width: 60px; height: 60px; margin: 0 auto 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 21px; letter-spacing: 0.5px;
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.35);
+    }
+    .auth-card h1 { font-size: 21px; font-weight: 700; margin-bottom: 4px; }
+    .auth-card p { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.45; }
+    .pin-input {
+      width: 100%; padding: 14px 16px;
+      font-size: 22px; font-weight: 700; letter-spacing: 8px; text-align: center;
+      border-radius: 14px; border: 1px solid var(--border);
+      background: var(--bg-0); color: var(--text); outline: none;
+      margin-bottom: 14px;
+    }
+    .pin-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25); }
+    .btn-primary {
+      width: 100%; padding: 13px 18px;
+      border: none; border-radius: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff; font-weight: 700; font-size: 15px; cursor: pointer;
+      transition: transform 0.12s, opacity 0.15s;
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .auth-err { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+    /* Mandatory Legal NDA Clickwrap & Signature Gate */
+    #ndaScreen {
+      display: none; position: fixed; inset: 0; z-index: 250;
+      background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.16), transparent 55%), rgba(5, 8, 15, 0.97);
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: 18px 14px calc(28px + env(safe-area-inset-bottom));
+    }
+    #ndaScreen.active { display: block; }
+    .nda-card {
+      width: 100%; max-width: 780px; margin: 0 auto;
+      background: var(--bg-1); border: 1px solid rgba(16, 185, 129, 0.38);
+      border-radius: 20px; padding: 22px 22px 24px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.78);
+    }
+    .nda-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245, 158, 11, 0.14); border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fcd34d; font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+      padding: 4px 10px; border-radius: 99px; margin-bottom: 10px; text-transform: uppercase;
+    }
+    .nda-card h2 { font-size: 17.5px; font-weight: 800; line-height: 1.3; margin-bottom: 4px; color: #fff; }
+    .nda-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.45; }
+    .nda-doc-box {
+      max-height: 270px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: #070b13; border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 15px; margin-bottom: 14px; font-size: 12.6px; line-height: 1.56; color: #cbd5e1;
+    }
+    .nda-doc-box h4 { color: #f8fafc; font-size: 13px; margin: 12px 0 4px; }
+    .nda-doc-box h4:first-child { margin-top: 0; }
+    .nda-doc-box p { margin-bottom: 8px; text-align: left; }
+    .nda-check-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 11px; padding: 10px 12px; margin-bottom: 9px; cursor: pointer;
+      font-size: 12.5px; line-height: 1.42; color: #e2e8f0;
+    }
+    .nda-check-row input[type="checkbox"] {
+      width: 19px; height: 19px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; cursor: pointer;
+    }
+    .nda-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
+    }
+    @media (max-width: 640px) {
+      .nda-card { padding: 16px 14px 20px; }
+      .nda-grid { grid-template-columns: 1fr; }
+      .nda-doc-box { max-height: 220px; }
+    }
+    .nda-field label {
+      display: block; font-size: 11.5px; font-weight: 700; color: var(--muted);
+      margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .nda-input {
+      width: 100%; padding: 11px 13px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg-0); color: #fff;
+      font-size: 14.5px; font-weight: 600; outline: none;
+    }
+    .nda-input:focus { border-color: var(--emerald); }
+    .sig-pad-wrap { margin-top: 12px; }
+    .sig-pad-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .sig-pad-head label {
+      font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .sig-canvas-box {
+      background: #ffffff; border: 2px solid #94a3b8; border-radius: 12px;
+      position: relative; height: 138px; overflow: hidden;
+    }
+    .sig-canvas-box.signed { border-color: var(--emerald); }
+    #ndaSigCanvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
+    .sig-baseline {
+      position: absolute; left: 16px; right: 16px; bottom: 26px;
+      border-bottom: 1px dashed #cbd5e1; pointer-events: none;
+      font-size: 10px; color: #94a3b8; padding-bottom: 2px;
+    }
+    .btn-sign {
+      width: 100%; margin-top: 14px; padding: 14px 18px; border: none; border-radius: 13px;
+      background: linear-gradient(135deg, var(--emerald), #059669);
+      color: #022c22; font-weight: 800; font-size: 15px; cursor: pointer;
+    }
+    .btn-sign:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* App Shell */
+    #appShell { display: none; height: 100%; width: 100%; }
+    #appShell.ready { display: flex; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 300px; min-width: 300px; height: 100%;
+      background: var(--bg-1);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      z-index: 80;
+      transition: transform 0.24s ease;
+    }
+    .sb-head {
+      padding: 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 11px;
+    }
+    .sb-badge {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; flex-shrink: 0;
+    }
+    .sb-title h2 { font-size: 14.5px; font-weight: 700; }
+    .sb-title span { font-size: 11.5px; color: var(--muted); display: block; }
+
+    .sb-actions { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
+    .new-chat-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 14px; border-radius: 11px; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer;
+    }
+    .sb-tabs {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
+      background: var(--bg-0); padding: 4px; border-radius: 10px;
+    }
+    .sb-tab {
+      padding: 7px 4px; border: none; border-radius: 7px;
+      background: transparent; color: var(--muted); font-size: 11.5px; font-weight: 600;
+      cursor: pointer; position: relative;
+    }
+    .sb-tab.active { background: var(--bg-2); color: var(--text); }
+    .badge-dot {
+      display: inline-block; min-width: 16px; height: 16px; padding: 0 4px;
+      border-radius: 99px; background: var(--danger); color: #fff;
+      font-size: 10px; line-height: 16px; margin-left: 3px;
+    }
+
+    .sb-scroll { flex: 1; overflow-y: auto; padding: 10px 12px; }
+    .section-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 8px 4px 6px; font-weight: 700; }
+
+    .conv-item {
+      padding: 10px 11px; border-radius: 10px; margin-bottom: 5px;
+      cursor: pointer; border: 1px solid transparent;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    }
+    .conv-item:hover { background: rgba(255,255,255,0.04); }
+    .conv-item.active { background: var(--bg-2); border-color: rgba(16, 185, 129, 0.45); }
+    .conv-item-title { font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 3px; word-break: break-word; }
+    .conv-item-sub { font-size: 11px; color: var(--muted); }
+    .conv-del {
+      background: transparent; border: none; color: var(--muted);
+      font-size: 14px; cursor: pointer; padding: 2px 5px; border-radius: 5px; opacity: 0.6;
+    }
+    .conv-del:hover { opacity: 1; color: var(--danger); background: rgba(239, 68, 68, 0.12); }
+
+    .mesh-card, .art-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 11px; padding: 11px; margin-bottom: 8px; font-size: 12.5px;
+    }
+    .mesh-card h4, .art-card h4 { font-size: 13px; margin-bottom: 4px; color: #fff; }
+    .mesh-card p, .art-card p { color: var(--muted); font-size: 12px; line-height: 1.4; margin-bottom: 8px; }
+    .mini-btn {
+      padding: 6px 10px; border-radius: 7px; border: 1px solid var(--border);
+      background: var(--bg-3); color: var(--text); font-size: 11.5px; font-weight: 600;
+      cursor: pointer; text-decoration: none; display: inline-block; margin-right: 5px;
+    }
+    .mini-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .sb-foot {
+      padding: 11px 14px; border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* Main Chat Area */
+    .main-pane { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; background: var(--bg-0); }
+    .topbar {
+      height: 56px; padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 22, 36, 0.85); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .menu-toggle {
+      display: none; background: var(--bg-2); border: 1px solid var(--border);
+      color: var(--text); border-radius: 9px; padding: 7px 10px; font-size: 16px; cursor: pointer;
+    }
+    .topbar-title { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .model-select {
+      background: var(--bg-2); color: var(--text); border: 1px solid var(--border);
+      border-radius: 9px; padding: 6px 10px; font-size: 12px; font-weight: 600; outline: none; max-width: 240px;
+    }
+
+    /* Messages Stream */
+    .chat-scroll {
+      flex: 1; overflow-y: auto; padding: 20px 18px 28px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .welcome-hero { max-width: 780px; margin: 16px auto; width: 100%; }
+    .welcome-hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .welcome-hero p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; line-height: 1.5; }
+    .quick-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px;
+    }
+    .quick-card {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: 13px; padding: 14px; cursor: pointer; text-align: left;
+      transition: border-color 0.15s, transform 0.12s; color: var(--text);
+    }
+    .quick-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .quick-card strong { display: block; font-size: 13.5px; margin-bottom: 4px; }
+    .quick-card span { font-size: 12px; color: var(--muted); line-height: 1.35; display: block; }
+
+    .msg-row { max-width: 820px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+    .msg-row.user { align-items: flex-end; }
+    .msg-row.assistant { align-items: flex-start; }
+
+    .msg-bubble {
+      max-width: 92%; padding: 13px 16px; border-radius: 16px;
+      font-size: 14.2px; line-height: 1.58; word-wrap: break-word;
+    }
+    .msg-row.user .msg-bubble {
+      background: linear-gradient(135deg, #059669, #2563eb);
+      color: #fff; border-bottom-right-radius: 4px;
+    }
+    .msg-row.assistant .msg-bubble {
+      background: var(--bg-1); border: 1px solid var(--border);
+      color: var(--text); border-bottom-left-radius: 4px; width: 100%;
+    }
+    .msg-meta { font-size: 11px; color: var(--muted); margin-top: 4px; padding: 0 4px; }
+
+    /* Markdown inside assistant bubbles */
+    .md-content h1, .md-content h2, .md-content h3 { margin: 12px 0 6px; font-size: 15.5px; color: #fff; }
+    .md-content p { margin-bottom: 9px; }
+    .md-content ul, .md-content ol { padding-left: 20px; margin-bottom: 9px; }
+    .md-content li { margin-bottom: 4px; }
+    .md-content a { color: #34d399; text-decoration: underline; }
+    .md-content code { background: rgba(0,0,0,0.35); padding: 2px 5px; border-radius: 5px; font-size: 12.5px; }
+    .md-content pre { background: #05080f; padding: 11px; border-radius: 9px; overflow-x: auto; margin: 8px 0; border: 1px solid var(--border); }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12.6px; display: block; overflow-x: auto; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 7px 9px; text-align: left; }
+    .md-content th { background: var(--bg-2); color: #fff; }
+
+    /* Tool pills & File Artifact cards */
+    .tool-pill {
+      background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 9px; padding: 7px 11px; margin-bottom: 9px; font-size: 12px;
+    }
+    .tool-pill summary { cursor: pointer; font-weight: 600; color: #93c5fd; }
+    .tool-pill pre { margin-top: 6px; font-size: 11px; color: var(--muted); white-space: pre-wrap; max-height: 160px; overflow-y: auto; }
+
+    .pdf-banner {
+      margin-top: 11px; padding: 12px 14px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(37, 99, 235, 0.16));
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    }
+    .pdf-banner strong { font-size: 13.5px; color: #ecfdf5; display: block; }
+    .pdf-banner span { font-size: 11.5px; color: #a7f3d0; }
+    .dl-btn {
+      padding: 8px 14px; border-radius: 9px; background: var(--emerald); color: #042f2e;
+      font-weight: 800; font-size: 12.5px; text-decoration: none;
+    }
+
+    .att-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .att-thumb {
+      width: 68px; height: 68px; border-radius: 9px; object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    /* Composer */
+    .composer-wrap {
+      padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--border); background: var(--bg-1);
+    }
+    .composer-inner { max-width: 820px; margin: 0 auto; }
+    .pending-files { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .pending-chip {
+      background: var(--bg-2); border: 1px solid var(--accent);
+      border-radius: 8px; padding: 4px 9px; font-size: 11.5px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pending-chip button { background: none; border: none; color: #f87171; cursor: pointer; font-weight: 700; }
+
+    .composer-box {
+      display: flex; align-items: flex-end; gap: 8px;
+      background: var(--bg-0); border: 1px solid var(--border);
+      border-radius: 15px; padding: 8px 10px;
+    }
+    .composer-box:focus-within { border-color: var(--accent); }
+    .attach-btn {
+      width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg-2); color: var(--text); font-size: 18px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+    }
+    #promptInput {
+      flex: 1; background: transparent; border: none; color: var(--text);
+      font-size: 15px; line-height: 1.4; max-height: 130px; resize: none; outline: none;
+      padding: 7px 4px; font-family: inherit;
+    }
+    .send-btn {
+      height: 38px; padding: 0 16px; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer; flex-shrink: 0;
+    }
+    .send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .drawer-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 70;
+    }
+    @media (max-width: 820px) {
+      .sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .drawer-backdrop.open { display: block; }
+      .menu-toggle { display: inline-flex; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Lock Screen -->
+  <div id="authScreen">
+    <div class="auth-card">
+      <div class="brand-orb">AL</div>
+      <h1>Antigravity AI</h1>
+      <p>Jordan Culliver • All-Access Personal &amp; DRC Pro AI<br/>Live Web Search • Excel • PDFs • Estimating</p>
+      <form id="loginForm">
+        <input id="pinField" class="pin-input" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" required />
+        <button type="submit" class="btn-primary" id="unlockBtn">Unlock Workspace</button>
+      </form>
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <!-- Mandatory Legal NDA & Electronic Signature Gate -->
+  <div id="ndaScreen">
+    <div class="nda-card">
+      <div class="nda-pill">⚖️ Mandatory Legal Agreement • Action Required</div>
+      <h2 id="ndaTitleEl">CONFIDENTIALITY, NON-DISCLOSURE, IP PROTECTION &amp; SYSTEM ACCESS AGREEMENT</h2>
+      <div class="nda-sub">
+        Protected Principals: <b>Adriano Daniele-Franco Vagnini</b>, <b>Joshua Dinverno</b> &amp; <b>Dinverno Remodeling and Construction Inc.</b> (+1 (248) 431-4609)<br/>
+        Please review all terms below, check both boxes, type your full legal name, and sign to unlock your workspace.
+      </div>
+
+      <div class="nda-doc-box" id="ndaDocBody"></div>
+
+      <label class="nda-check-row">
+        <input type="checkbox" id="ndaChkTerms" />
+        <span>I have read, understand, and agree to be legally bound by all terms of this <b>Confidentiality, Non-Disclosure, IP Protection &amp; System Access Agreement</b>, including Company IP ownership, 24-month client/lead non-diversion, and real-time workspace administration &amp; logging.</span>
+      </label>
+
+      <label class="nda-check-row">
+        <input type="checkbox" id="ndaChkEsign" />
+        <span>I consent to electronic execution under the Federal ESIGN Act (15 U.S.C. § 7001) &amp; Michigan UETA (MCL 450.831) and adopt my typed legal name and drawn signature below as my binding legal signature, with an executed PDF copy archived for both parties.</span>
+      </label>
+
+      <div class="nda-grid">
+        <div class="nda-field">
+          <label for="ndaTypedName">Full Legal Name (Required)</label>
+          <input id="ndaTypedName" class="nda-input" type="text" placeholder="Jordan Culliver" autocomplete="name" />
+        </div>
+        <div class="nda-field">
+          <label for="ndaEmail">Work / Contact Email</label>
+          <input id="ndaEmail" class="nda-input" type="email" value="jordan@dinvernoremodeling.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="sig-pad-wrap">
+        <div class="sig-pad-head">
+          <label>Draw Your Live Signature (Finger, Stylus, or Mouse)</label>
+          <button type="button" class="mini-btn" id="clearSigBtn" style="margin:0;">Clear Signature</button>
+        </div>
+        <div class="sig-canvas-box" id="sigCanvasBox">
+          <div class="sig-baseline">✕ Sign Above</div>
+          <canvas id="ndaSigCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="auth-err" id="ndaErr" style="text-align:left;margin-top:8px;"></div>
+      <button type="button" class="btn-sign" id="submitNdaBtn">✍️ Sign Agreement &amp; Unlock Antigravity</button>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <div id="appShell">
+    <div class="drawer-backdrop" id="backdrop"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-head">
+        <div class="sb-badge">AL</div>
+        <div class="sb-title">
+          <h2>Jordan Culliver</h2>
+          <span>All-Access AI + DRC Pro</span>
+        </div>
+      </div>
+      <div class="sb-actions">
+        <button class="new-chat-btn" id="newChatBtn">＋ New Chat</button>
+        <button class="mini-btn primary" id="sidebarZoomBtn" style="width:100%;margin-top:8px;padding:9px 12px;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;">💬 Send / View Zoom Texts</button>
+        <div class="sb-tabs">
+          <button class="sb-tab active" data-tab="chats">Chats</button>
+          <button class="sb-tab" data-tab="mesh">Adriano <span id="meshBadge" class="badge-dot" style="display:none">0</span></button>
+          <button class="sb-tab" data-tab="pdfs">Files &amp; PDFs</button>
+        </div>
+      </div>
+      <div class="sb-scroll" id="sbContent"></div>
+      <div class="sb-foot">
+        <a id="myNdaLink" href="#" target="_blank" style="color:#6ee7b7;text-decoration:none;font-weight:700;display:none;" title="Download your signed NDA PDF">⚖️ Signed NDA PDF ↗</a>
+        <span id="sandboxLbl">All-Access AI</span>
+        <button class="mini-btn" id="lockBtn" style="margin:0;">Lock</button>
+      </div>
+    </aside>
+
+    <main class="main-pane">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+          <button class="menu-toggle" id="menuBtn">☰</button>
+          <div class="topbar-title" id="chatHeaderTitle">Antigravity All-Access AI</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" class="mini-btn primary" id="topZoomBtn" style="margin:0;padding:7px 11px;font-weight:700;white-space:nowrap;">💬 Zoom SMS</button>
+          <select id="modelSelect" class="model-select">
+            <option value="gemini-3-flash-preview">⚡ Gemini 3 Pro-Flash (Web + Excel)</option>
+            <option value="gemini-2.5-flash">🧠 Gemini 2.5 Balanced</option>
+            <option value="gemini-flash-lite-latest">🚀 Instant Fast Mode</option>
+          </select>
+        </div>
+      </header>
+
+      <section class="chat-scroll" id="chatScroll"></section>
+
+      <footer class="composer-wrap">
+        <div class="composer-inner">
+          <div class="pending-files" id="pendingFiles"></div>
+          <div class="composer-box">
+            <input type="file" id="filePicker" multiple accept="image/*,.pdf,.csv,.xlsx,.xls,.txt,.md,.json,.docx" style="display:none" />
+            <button type="button" class="attach-btn" id="attachBtn" title="Upload Any Photo, PDF, Spreadsheet, or Blueprint">📎</button>
+            <textarea id="promptInput" rows="1" placeholder="Ask anything — search the live web, build Excel spreadsheets, plan projects, analyze photos, or generate DRC Proposal PDFs..."></textarea>
+            <button type="button" class="send-btn" id="sendBtn">Send ↑</button>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Zoom Phone SMS Messenger Modal -->
+  <div id="zoomSmsModal" style="display:none;position:fixed;inset:0;z-index:9600;background:rgba(3,7,18,0.82);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:14px;">
+    <div style="width:100%;max-width:560px;max-height:90vh;overflow-y:auto;background:#111827;border:1px solid rgba(16,185,129,0.35);border-radius:18px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,0.65);color:#f8fafc;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div>
+          <h3 style="margin:0;font-size:17px;font-weight:800;">💬 Zoom Phone SMS Messenger</h3>
+          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;">Text any 10-digit mobile number or DRC teammate through Zoom • Line: (248) 996-1779</div>
+        </div>
+        <button type="button" class="mini-btn" id="closeZoomModalBtn" style="margin:0;">✕ Close</button>
+      </div>
+
+      <div style="background:rgba(15,23,42,0.8);border:1px solid rgba(148,163,184,0.18);border-radius:12px;padding:13px;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px;">
+          <div>
+            <label style="display:block;font-size:11px;color:#94a3b8;margin-bottom:4px;font-weight:700;">Quick Pick DRC Teammate</label>
+            <select id="zoomTeamSelect" class="nda-input" style="width:100%;padding:8px 10px;font-size:12.5px;">
+              <option value="">— Or type any phone # →</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:#94a3b8;margin-bottom:4px;font-weight:700;">To Phone # or Name</label>
+            <input id="zoomToInput" class="nda-input" type="text" placeholder="(248) 555-0192 or Jacob" style="width:100%;padding:8px 10px;font-size:12.5px;" />
+          </div>
+        </div>
+        <label style="display:block;font-size:11px;color:#94a3b8;margin-bottom:4px;font-weight:700;">Text Message</label>
+        <textarea id="zoomMsgInput" class="nda-input" rows="3" placeholder="Type your Zoom SMS message here..." style="width:100%;padding:9px 10px;font-size:13px;resize:vertical;"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;flex-wrap:wrap;">
+          <label style="font-size:11.5px;color:#cbd5e1;display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" id="zoomSigCheck" checked /> Include my callback number (248) 996-1779
+          </label>
+          <button type="button" class="send-btn" id="sendZoomNowBtn" style="padding:8px 16px;font-size:13px;">📲 Send via Zoom</button>
+        </div>
+        <div id="zoomSendStatus" style="margin-top:8px;font-size:12px;"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:800;color:#6ee7b7;text-transform:uppercase;letter-spacing:0.04em;">📥 My Recent Zoom Texts ((248) 996-1779)</div>
+        <button type="button" class="mini-btn" id="refreshZoomInboxBtn" style="margin:0;">🔄 Refresh</button>
+      </div>
+      <div id="zoomInboxList" style="max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:#cbd5e1;">
+        <div style="color:#94a3b8;padding:10px;text-align:center;">Click Refresh to load your recent Zoom SMS conversations.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_PIN_KEY = 'drc_jordan_rep_pin_v1';
+    const STORAGE_API_KEY = 'drc_jordan_api_base_v1';
+
+    let state = {
+      pin: sessionStorage.getItem(STORAGE_PIN_KEY) || localStorage.getItem(STORAGE_PIN_KEY) || '',
+      apiBase: '',
+      activeTab: 'chats',
+      activeConvId: null,
+      conversations: [],
+      artifacts: [],
+      meshTickets: [],
+      pendingUploads: [],
+      busy: false
+    };
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function artifactUiMeta(a) {
+      const fn = String(a.filename || '').toLowerCase();
+      const metaObj = a.metadata || {};
+      if (a.kind === 'live_webpage' || fn.endsWith('.html')) {
+        return {
+          icon: '🌐',
+          btn: 'Open Live Website ↗',
+          href: metaObj.live_url || a.live_url || `${state.apiBase}/apps/${encodeURIComponent(a.filename)}`
+        };
+      }
+      if (fn.endsWith('.xlsx') || fn.endsWith('.xls')) return { icon: '📊', btn: 'Download Excel (.xlsx) ↗' };
+      if (fn.endsWith('.csv')) return { icon: '📊', btn: 'Download CSV ↗' };
+      if (fn.endsWith('.pdf')) return { icon: '📄', btn: 'Open PDF ↗' };
+      return { icon: '📝', btn: 'Download File ↗' };
+    }
+
+    function renderMarkdown(md) {
+      let html = esc(md || '');
+      html = html.replace(/```([\s\S]*?)```/g, (_, code) => `<pre><code>${code.trim()}</code></pre>`);
+      html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+      html = html.replace(/\[([^\]]+)\]\((?:sandbox:)?(\/api\/files\/[^\s)]+)\)/g, (_, lbl, p) => {
+        const sep = p.includes('?') ? '&amp;' : '?';
+        return `<a href="${state.apiBase}${p}${sep}pin=${encodeURIComponent(state.pin)}" target="_blank" rel="noopener">${lbl}</a>`;
+      });
+      html = html.replace(/\[([^\]]+)\]\((?:sandbox:)?(\/apps\/[^\s)]+)\)/g, (_, lbl, p) => `<a href="${state.apiBase}${p}" target="_blank" rel="noopener">${lbl}</a>`);
+      html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      // Markdown tables
+      html = html.replace(/((?:^\|.*\|\s*$\n?){2,})/gm, (tblBlock) => {
+        const lines = tblBlock.trim().split('\n').filter(l => l.trim().startsWith('|'));
+        if (lines.length < 2) return tblBlock;
+        const parseRow = r => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+        const hdr = parseRow(lines[0]);
+        const bodyRows = lines.slice(1).filter(l => !/^[\s|:-]+$/.test(l)).map(parseRow);
+        return `<table><thead><tr>${hdr.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${bodyRows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+      });
+      html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/^\s*[-•*]\s+(.*)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
+      html = html.replace(/\n\n+/g, '</p><p>');
+      html = `<p>${html.replace(/\n/g, '<br/>')}</p>`;
+      return html;
+    }
+
+    async function decryptSlot(encObj, pin) {
+      const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+      const enc = new TextEncoder();
+      const keyMat = await crypto.subtle.importKey('raw', enc.encode(String(pin)), 'PBKDF2', false, ['deriveKey']);
+      const key = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: b64(encObj.salt), iterations: encObj.iter || 100000, hash: 'SHA-256' },
+        keyMat,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(encObj.iv) }, key, b64(encObj.ct));
+      return JSON.parse(new TextDecoder().decode(plain));
+    }
+
+    async function resolveApiBase(pin) {
+      if (!location.hostname.endsWith('github.io')) {
+        return location.origin + (location.pathname.startsWith('/jordan-edge') ? '/jordan-edge' : '');
+      }
+      const res = await fetch(`./tunnel.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Unable to load live tunnel beacon');
+      const beacon = await res.json();
+      for (const slotName of ['rep_slot', 'overseer_slot']) {
+        if (beacon[slotName]) {
+          try {
+            const dec = await decryptSlot(beacon[slotName], pin);
+            if (dec && dec.tunnelUrl) return dec.tunnelUrl.replace(/\/$/, '');
+          } catch (_) {}
+        }
+      }
+      throw new Error('Incorrect PIN');
+    }
+
+    async function apiFetch(path, opts = {}) {
+      const headers = Object.assign({}, opts.headers || {}, { 'x-access-pin': state.pin });
+      if (!(opts.body instanceof FormData) && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      }
+      const resp = await fetch(`${state.apiBase}${path}`, { ...opts, headers });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.status === 403 && data.nda_required) {
+        state.ndaLocked = true;
+        document.getElementById('appShell').classList.remove('ready');
+        await loadAndShowNdaGate();
+        throw new Error('Please review and sign the Confidentiality & IP Agreement to continue.');
+      }
+      if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+      return data;
+    }
+
+    let sigCtx = null;
+    let sigDrawing = false;
+    let sigStrokeCount = 0;
+
+    function initSignaturePad() {
+      const canvas = document.getElementById('ndaSigCanvas');
+      if (!canvas) return;
+      const box = document.getElementById('sigCanvasBox');
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rect = box.getBoundingClientRect();
+      const w = Math.max(280, Math.floor(rect.width || 620));
+      const h = Math.max(120, Math.floor(rect.height || 138));
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      sigCtx = canvas.getContext('2d');
+      sigCtx.scale(dpr, dpr);
+      sigCtx.lineCap = 'round';
+      sigCtx.lineJoin = 'round';
+      sigCtx.lineWidth = 2.6;
+      sigCtx.strokeStyle = '#0f172a';
+      sigStrokeCount = 0;
+      box.classList.remove('signed');
+
+      if (!canvas.dataset.bound) {
+        canvas.dataset.bound = '1';
+        const pt = (ev) => {
+          const r = canvas.getBoundingClientRect();
+          return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+        };
+        canvas.addEventListener('pointerdown', (ev) => {
+          ev.preventDefault();
+          canvas.setPointerCapture(ev.pointerId);
+          sigDrawing = true;
+          const p = pt(ev);
+          sigCtx.beginPath();
+          sigCtx.moveTo(p.x, p.y);
+          sigCtx.lineTo(p.x + 0.1, p.y + 0.1);
+          sigCtx.stroke();
+          sigStrokeCount++;
+          document.getElementById('sigCanvasBox').classList.add('signed');
+        });
+        canvas.addEventListener('pointermove', (ev) => {
+          if (!sigDrawing) return;
+          ev.preventDefault();
+          const p = pt(ev);
+          sigCtx.lineTo(p.x, p.y);
+          sigCtx.stroke();
+          sigStrokeCount++;
+        });
+        const stop = (ev) => {
+          if (!sigDrawing) return;
+          sigDrawing = false;
+          try { canvas.releasePointerCapture(ev.pointerId); } catch (_) {}
+        };
+        canvas.addEventListener('pointerup', stop);
+        canvas.addEventListener('pointercancel', stop);
+      }
+    }
+
+    function clearSignaturePad() {
+      const canvas = document.getElementById('ndaSigCanvas');
+      if (!canvas || !sigCtx) return;
+      sigCtx.save();
+      sigCtx.setTransform(1, 0, 0, 1, 0, 0);
+      sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+      sigCtx.restore();
+      sigStrokeCount = 0;
+      document.getElementById('sigCanvasBox').classList.remove('signed');
+    }
+
+    async function loadAndShowNdaGate() {
+      const resp = await fetch(`${state.apiBase}/api/rep/nda-status`, {
+        headers: { 'x-access-pin': state.pin }
+      });
+      const info = await resp.json();
+      if (info.signed) {
+        state.ndaLocked = false;
+        document.getElementById('ndaScreen').classList.remove('active');
+        document.getElementById('appShell').classList.add('ready');
+        await refreshBootstrap();
+        renderWelcomeOrActiveChat();
+        return;
+      }
+      state.ndaLocked = true;
+      document.getElementById('ndaTitleEl').textContent = info.nda_title || 'CONFIDENTIALITY, NON-DISCLOSURE, IP PROTECTION & SYSTEM ACCESS AGREEMENT';
+      const docEl = document.getElementById('ndaDocBody');
+      docEl.innerHTML = (info.sections || []).map(s => `
+        <h4>${esc(s.heading)}</h4>
+        <p>${esc(s.body)}</p>
+      `).join('') + `
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+          Agreement Version: <b>${esc(info.nda_version)}</b> • Canonical Text SHA-256: <code>${esc((info.text_sha256 || '').slice(0, 32))}…</code>
+        </div>
+      `;
+      if (info.rep_email && !document.getElementById('ndaEmail').value) {
+        document.getElementById('ndaEmail').value = info.rep_email;
+      }
+      document.getElementById('ndaErr').textContent = '';
+      document.getElementById('ndaScreen').classList.add('active');
+      requestAnimationFrame(() => initSignaturePad());
+    }
+
+    async function submitNdaSignature() {
+      const errEl = document.getElementById('ndaErr');
+      const btn = document.getElementById('submitNdaBtn');
+      errEl.textContent = '';
+
+      const agreedTerms = document.getElementById('ndaChkTerms').checked;
+      const agreedEsign = document.getElementById('ndaChkEsign').checked;
+      const typedName = document.getElementById('ndaTypedName').value.trim();
+      const email = document.getElementById('ndaEmail').value.trim();
+
+      if (!agreedTerms || !agreedEsign) {
+        errEl.textContent = '⚠️ Please check both legal consent boxes above before signing.';
+        return;
+      }
+      if (typedName.length < 5 || !typedName.includes(' ')) {
+        errEl.textContent = '⚠️ Please type your full legal first and last name (Jordan Culliver).';
+        document.getElementById('ndaTypedName').focus();
+        return;
+      }
+      if (sigStrokeCount < 6) {
+        errEl.textContent = '⚠️ Please draw your signature inside the white signature box above.';
+        return;
+      }
+
+      const canvas = document.getElementById('ndaSigCanvas');
+      const sigDataUrl = canvas.toDataURL('image/png');
+
+      btn.disabled = true;
+      btn.textContent = 'Generating Sealed Legal PDF & Unlocking…';
+      try {
+        const resp = await fetch(`${state.apiBase}/api/rep/nda-sign`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-pin': state.pin
+          },
+          body: JSON.stringify({
+            typed_name: typedName,
+            email,
+            agreed_terms: agreedTerms,
+            agreed_esign: agreedEsign,
+            signature_data_url: sigDataUrl
+          })
+        });
+        const res = await resp.json().catch(() => ({}));
+        if (!resp.ok || !res.success) throw new Error(res.error || 'Could not record signature');
+
+        state.ndaLocked = false;
+        state.justSignedCert = res;
+        document.getElementById('ndaScreen').classList.remove('active');
+        document.getElementById('appShell').classList.add('ready');
+        await refreshBootstrap();
+        renderWelcomeOrActiveChat();
+      } catch (e) {
+        errEl.textContent = '⚠️ ' + (e.message || 'Signature submission failed');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✍️ Sign Agreement & Unlock Antigravity';
+      }
+    }
+
+    async function tryUnlock(pin) {
+      const errEl = document.getElementById('authErr');
+      const btn = document.getElementById('unlockBtn');
+      errEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Connecting…';
+      try {
+        const base = await resolveApiBase(pin);
+        const loginRes = await fetch(`${base}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin, role: 'rep' })
+        });
+        const loginData = await loginRes.json();
+        if (!loginRes.ok || !loginData.success) throw new Error(loginData.error || 'Incorrect PIN');
+        state.pin = pin;
+        state.apiBase = base;
+        localStorage.setItem(STORAGE_PIN_KEY, pin);
+        sessionStorage.setItem(STORAGE_PIN_KEY, pin);
+        localStorage.setItem(STORAGE_API_KEY, base);
+        document.getElementById('authScreen').style.display = 'none';
+
+        if (!loginData.nda_signed) {
+          await loadAndShowNdaGate();
+          return;
+        }
+
+        state.ndaLocked = false;
+        document.getElementById('appShell').classList.add('ready');
+        await refreshBootstrap();
+        renderWelcomeOrActiveChat();
+      } catch (e) {
+        errEl.textContent = e.message || 'Authentication failed';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Unlock Workspace';
+      }
+    }
+
+    async function refreshBootstrap() {
+      const data = await apiFetch('/api/rep/bootstrap');
+      state.conversations = data.conversations || [];
+      state.artifacts = data.artifacts || [];
+      state.meshTickets = data.mesh_tickets || [];
+      state.activeNda = data.active_nda || null;
+      const ndaLink = document.getElementById('myNdaLink');
+      const sbLbl = document.getElementById('sandboxLbl');
+      if (state.activeNda && state.activeNda.download_url) {
+        ndaLink.href = `${state.apiBase}${state.activeNda.download_url}?pin=${encodeURIComponent(state.pin)}`;
+        ndaLink.style.display = 'inline-block';
+        if (sbLbl) sbLbl.style.display = 'none';
+      } else {
+        ndaLink.style.display = 'none';
+        if (sbLbl) sbLbl.style.display = 'inline';
+      }
+      const badge = document.getElementById('meshBadge');
+      if (data.pending_mesh_count > 0) {
+        badge.style.display = 'inline-block';
+        badge.textContent = data.pending_mesh_count;
+      } else {
+        badge.style.display = 'none';
+      }
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      const box = document.getElementById('sbContent');
+      if (state.activeTab === 'chats') {
+        if (!state.conversations.length) {
+          box.innerHTML = `<div style="padding:18px 8px;color:var(--muted);font-size:12.5px;text-align:center;">No chats yet.<br/>Tap any starter card or ask anything below!</div>`;
+          return;
+        }
+        box.innerHTML = `<div class="section-lbl">Recent Chats</div>` + state.conversations.map(c => `
+          <div class="conv-item ${c.id === state.activeConvId ? 'active' : ''}" onclick="openConversation('${esc(c.id)}')">
+            <div style="min-width:0;flex:1;">
+              <div class="conv-item-title">${esc(c.title)}</div>
+              <div class="conv-item-sub">${esc((c.updated_at || '').replace('T',' ').slice(0,16))} • ${c.message_count || 0} msgs</div>
+            </div>
+            <button class="conv-del" title="Remove from list" onclick="event.stopPropagation();archiveConv('${esc(c.id)}')">✕</button>
+          </div>
+        `).join('');
+      } else if (state.activeTab === 'mesh') {
+        let html = `<div class="section-lbl">Dispatches from Adriano Vagnini</div>`;
+        html += `<button class="mini-btn primary" style="width:100%;margin-bottom:10px;text-align:center;" onclick="quickPrompt('Send a DRC Mesh field update to Adriano Vagnini: ')">📡 Send Update to Adriano</button>`;
+        if (!state.meshTickets.length) {
+          html += `<div style="padding:14px 6px;color:var(--muted);font-size:12px;text-align:center;">No dispatches in your inbox right now.</div>`;
+        } else {
+          html += state.meshTickets.map(t => `
+            <div class="mesh-card">
+              <h4>[${esc(t.priority || 'HIGH')}] ${esc(t.title || t.subject)}</h4>
+              <p>${esc(t.description || '')}</p>
+              <div style="font-size:10.5px;color:var(--muted);margin-bottom:7px;">${esc(t.ticket_id)} • Status: <b>${esc((t.status||'pending').toUpperCase())}</b></div>
+              <button class="mini-btn primary" onclick="workOnMesh('${esc(t.ticket_id)}','${esc((t.title||'').replace(/'/g,''))}','${esc((t.description||'').replace(/'/g,'').replace(/\n/g,' '))}')">Open with AI</button>
+            </div>
+          `).join('');
+        }
+        box.innerHTML = html;
+      } else {
+        let html = `<div class="section-lbl">Spreadsheets, PDFs &amp; Proposals</div>`;
+        if (!state.artifacts.length) {
+          html += `<div style="padding:14px 6px;color:var(--muted);font-size:12px;text-align:center;">Any Excel (.xlsx) spreadsheets, clean PDFs, or DRC Proposal PDFs you create appear here.</div>`;
+        } else {
+          html += state.artifacts.map(a => {
+            const meta = artifactUiMeta(a);
+            const href = meta.href || `${state.apiBase}${a.download_url}?pin=${encodeURIComponent(state.pin)}`;
+            return `
+              <div class="art-card">
+                <h4>${meta.icon} ${esc(a.title)}</h4>
+                <p>${esc(a.filename)} (${Math.max(1, Math.round((a.size_bytes||0)/1024))} KB)</p>
+                <a class="mini-btn primary" target="_blank" href="${href}">${meta.btn}</a>
+              </div>
+            `;
+          }).join('');
+        }
+        box.innerHTML = html;
+      }
+    }
+
+    const QUICK_CARDS = [
+      {
+        title: '🌐 Live Web Search & Shopping',
+        desc: 'Compare products, prices, local spots, current news, or live sports stats & odds',
+        prompt: 'Search the live web for the top 5 best-rated 75-inch 4K TVs or entertainment centers under $1,200 right now with retailer prices and pros/cons.'
+      },
+      {
+        title: '📊 Build an Excel (.xlsx) Spreadsheet',
+        desc: 'Generate a downloadable, formatted Excel spreadsheet for any data, budget, or stats',
+        prompt: 'Search the live web for this week\'s top NFL touchdown scorer leaders & odds, and build me a downloadable Excel (.xlsx) spreadsheet of the top 20 players.'
+      },
+      {
+        title: '📋 Good / Better / Best DRC Proposal PDF',
+        desc: 'Generate a branded Dinverno Remodeling homeowner PDF quote + follow-up text',
+        prompt: 'Build a Good / Better / Best DRC Proposal PDF for homeowner Mark & Lisa Reynolds at 18420 Jamestown Cir, Northville, MI 48168 (Phone: 248-555-0192) for 120 linear ft of interior basement waterproofing + sump & battery backup.'
+      },
+      {
+        title: '📸 Analyze Any Photo, PDF, or Blueprint',
+        desc: 'Upload any photo, receipt, contract, document, or jobsite picture for instant analysis',
+        prompt: 'Analyze the attached photo/document in detail and give me clear takeaways and next steps.'
+      },
+      {
+        title: '📅 My DRC CRM Schedule & Michigan Code',
+        desc: 'Check my assigned DRC CRM appointments, enter a 5-point lead, or verify MI code',
+        prompt: 'Check my upcoming assigned appointments in DRC CRM, and remind me of Michigan 42" frost footing + Job Box inspection rules.'
+      },
+      {
+        title: '💬 Send & Check Zoom Texts',
+        desc: 'Text any homeowner, personal contact, or DRC teammate right through Zoom Phone',
+        prompt: 'Check my recent Zoom SMS text messages and show me who texted me last.'
+      }
+    ];
+
+    function renderWelcomeOrActiveChat() {
+      if (state.activeConvId) return;
+      document.getElementById('chatHeaderTitle').textContent = 'Antigravity All-Access AI';
+      const sc = document.getElementById('chatScroll');
+      const signedBanner = state.justSignedCert ? `
+        <div class="pdf-banner" style="margin-bottom:16px;">
+          <div>
+            <strong>✅ Legal NDA &amp; Access Agreement Executed (${esc(state.justSignedCert.certificate_id)})</strong>
+            <span>Signed ${esc(state.justSignedCert.signed_at_local)} • SHA-256 Seal: ${esc((state.justSignedCert.evidence_sha256 || '').slice(0, 20))}…</span>
+          </div>
+          <a class="dl-btn" target="_blank" href="${state.apiBase}${state.justSignedCert.download_url}?pin=${encodeURIComponent(state.pin)}">📄 Download My Signed PDF ↗</a>
+        </div>
+      ` : '';
+      sc.innerHTML = `
+        <div class="welcome-hero">
+          ${signedBanner}
+          <h2>Hey Jordan — Use Antigravity for Anything 👋</h2>
+          <p>Your all-access personal &amp; professional AI. Search the live web, build real <b>Excel (.xlsx) spreadsheets</b>, plan personal projects, analyze any photo/PDF, or generate <b>Dinverno Remodeling and Construction</b> Good/Better/Best Proposal PDFs &amp; check your DRC CRM.</p>
+          <div class="quick-grid">
+            ${QUICK_CARDS.map((c, idx) => `
+              <button class="quick-card" onclick="useQuickCard(${idx})">
+                <strong>${esc(c.title)}</strong>
+                <span>${esc(c.desc)}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    window.useQuickCard = function(idx) {
+      const card = QUICK_CARDS[idx];
+      const inp = document.getElementById('promptInput');
+      inp.value = card.prompt;
+      inp.focus();
+      autoResizeInput();
+    };
+
+    window.quickPrompt = function(txt) {
+      closeMobileDrawer();
+      const inp = document.getElementById('promptInput');
+      inp.value = txt;
+      inp.focus();
+      autoResizeInput();
+    };
+
+    window.workOnMesh = function(tid, title, desc) {
+      closeMobileDrawer();
+      state.activeConvId = null;
+      renderWelcomeOrActiveChat();
+      const inp = document.getElementById('promptInput');
+      inp.value = `Help me complete Adriano's Mesh Task [${tid}] "${title}": ${desc}`;
+      inp.focus();
+      autoResizeInput();
+    };
+
+    window.openConversation = async function(convId) {
+      closeMobileDrawer();
+      state.activeConvId = convId;
+      renderSidebar();
+      const data = await apiFetch(`/api/rep/conversations/${convId}`);
+      document.getElementById('chatHeaderTitle').textContent = data.conversation.title || 'Chat';
+      renderMessages(data.messages || []);
+    };
+
+    window.archiveConv = async function(convId) {
+      await apiFetch(`/api/rep/conversations/${convId}`, { method: 'DELETE' });
+      if (state.activeConvId === convId) {
+        state.activeConvId = null;
+        renderWelcomeOrActiveChat();
+      }
+      await refreshBootstrap();
+    };
+
+    function renderMessages(messages) {
+      const sc = document.getElementById('chatScroll');
+      if (!messages.length) {
+        renderWelcomeOrActiveChat();
+        return;
+      }
+      sc.innerHTML = messages.map(m => {
+        const isUser = m.role === 'user';
+        const atts = (m.attachments || []).map(a =>
+          (a.mime_type || '').startsWith('image/')
+            ? `<a target="_blank" href="${state.apiBase}${a.url}?pin=${encodeURIComponent(state.pin)}"><img class="att-thumb" src="${state.apiBase}${a.url}?pin=${encodeURIComponent(state.pin)}" alt="${esc(a.original_name)}"/></a>`
+            : `<a class="mini-btn" target="_blank" href="${state.apiBase}${a.url}?pin=${encodeURIComponent(state.pin)}">📎 ${esc(a.original_name)}</a>`
+        ).join('');
+
+        const tools = (m.tool_calls || []).map(tc => `
+          <details class="tool-pill">
+            <summary>⚡ Executed <code>${esc(tc.name)}</code> (${tc.duration_ms || 0} ms)</summary>
+            <pre>${esc(JSON.stringify(tc.args, null, 2))}</pre>
+          </details>
+        `).join('');
+
+        const arts = (m.artifacts || []).map(a => {
+          const meta = artifactUiMeta(a);
+          const href = meta.href || `${state.apiBase}${a.download_url}?pin=${encodeURIComponent(state.pin)}`;
+          return `
+            <div class="pdf-banner">
+              <div>
+                <strong>${meta.icon} ${esc(a.title)}</strong>
+                <span>${esc(a.filename)} • Ready to open or share</span>
+              </div>
+              <a class="dl-btn" target="_blank" href="${href}">${meta.btn}</a>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="msg-row ${isUser ? 'user' : 'assistant'}">
+            <div class="msg-bubble">
+              ${atts ? `<div class="att-strip">${atts}</div>` : ''}
+              ${!isUser ? tools : ''}
+              <div class="${isUser ? '' : 'md-content'}">${isUser ? esc(m.content).replace(/\n/g,'<br/>') : renderMarkdown(m.content)}</div>
+              ${!isUser ? arts : ''}
+            </div>
+            <div class="msg-meta">${isUser ? 'Jordan' : 'Antigravity AI'} • ${esc((m.created_at||'').replace('T',' ').slice(11,16))}</div>
+          </div>
+        `;
+      }).join('');
+      sc.scrollTop = sc.scrollHeight;
+    }
+
+    function renderPendingUploads() {
+      const box = document.getElementById('pendingFiles');
+      box.innerHTML = state.pendingUploads.map((u, idx) => `
+        <div class="pending-chip">
+          <span>📎 ${esc(u.original_name)}</span>
+          <button type="button" onclick="removePending(${idx})">✕</button>
+        </div>
+      `).join('');
+    }
+    window.removePending = function(i) {
+      state.pendingUploads.splice(i, 1);
+      renderPendingUploads();
+    };
+
+    async function handleFileSelect(ev) {
+      const files = Array.from(ev.target.files || []);
+      if (!files.length) return;
+      const fd = new FormData();
+      if (state.activeConvId) fd.append('conversation_id', state.activeConvId);
+      files.forEach(f => fd.append('files', f));
+      const btn = document.getElementById('attachBtn');
+      btn.textContent = '⏳';
+      try {
+        const res = await apiFetch('/api/rep/upload', { method: 'POST', body: fd });
+        (res.uploads || []).forEach(u => state.pendingUploads.push(u));
+        renderPendingUploads();
+      } catch (e) {
+        alert('Upload error: ' + e.message);
+      } finally {
+        btn.textContent = '📎';
+        ev.target.value = '';
+      }
+    }
+
+    async function sendPrompt() {
+      if (state.busy) return;
+      const inp = document.getElementById('promptInput');
+      const text = inp.value.trim();
+      if (!text && !state.pendingUploads.length) return;
+
+      state.busy = true;
+      const sendBtn = document.getElementById('sendBtn');
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Working…';
+
+      const promptText = text || 'Analyze the attached file(s) and provide helpful insights.';
+      const uploadIds = state.pendingUploads.map(u => u.id);
+      inp.value = '';
+      autoResizeInput();
+      state.pendingUploads = [];
+      renderPendingUploads();
+
+      const sc = document.getElementById('chatScroll');
+      if (sc.querySelector('.welcome-hero')) sc.innerHTML = '';
+      sc.insertAdjacentHTML('beforeend', `
+        <div class="msg-row user">
+          <div class="msg-bubble">${esc(promptText).replace(/\n/g,'<br/>')}</div>
+        </div>
+        <div class="msg-row assistant" id="thinkingBubble">
+          <div class="msg-bubble" style="color:var(--muted);">⚡ Thinking, searching live web &amp; running tools…</div>
+        </div>
+      `);
+      sc.scrollTop = sc.scrollHeight;
+
+      try {
+        const model = document.getElementById('modelSelect').value;
+        const res = await apiFetch('/api/rep/chat', {
+          method: 'POST',
+          body: JSON.stringify({
+            conversation_id: state.activeConvId || '',
+            message: promptText,
+            upload_ids: uploadIds,
+            model
+          })
+        });
+        state.activeConvId = res.conversation.id;
+        document.getElementById('chatHeaderTitle').textContent = res.conversation.title;
+        await refreshBootstrap();
+        const convData = await apiFetch(`/api/rep/conversations/${state.activeConvId}`);
+        renderMessages(convData.messages || []);
+      } catch (e) {
+        const tb = document.getElementById('thinkingBubble');
+        if (tb) tb.innerHTML = `<div class="msg-bubble" style="border-color:var(--danger);color:#fca5a5;">⚠️ ${esc(e.message)}</div>`;
+      } finally {
+        state.busy = false;
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send ↑';
+      }
+    }
+
+    function autoResizeInput() {
+      const inp = document.getElementById('promptInput');
+      inp.style.height = 'auto';
+      inp.style.height = Math.min(130, inp.scrollHeight) + 'px';
+    }
+
+    function closeMobileDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('backdrop').classList.remove('open');
+    }
+
+    document.getElementById('clearSigBtn').addEventListener('click', clearSignaturePad);
+    document.getElementById('submitNdaBtn').addEventListener('click', submitNdaSignature);
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      tryUnlock(document.getElementById('pinField').value.trim());
+    });
+    document.getElementById('newChatBtn').addEventListener('click', () => {
+      closeMobileDrawer();
+      state.activeConvId = null;
+      renderSidebar();
+      renderWelcomeOrActiveChat();
+    });
+    document.querySelectorAll('.sb-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sb-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeTab = btn.dataset.tab;
+        renderSidebar();
+      });
+    });
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('backdrop').classList.add('open');
+    });
+    document.getElementById('backdrop').addEventListener('click', closeMobileDrawer);
+    document.getElementById('lockBtn').addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_PIN_KEY);
+      sessionStorage.removeItem(STORAGE_PIN_KEY);
+      location.reload();
+    });
+    document.getElementById('attachBtn').addEventListener('click', () => document.getElementById('filePicker').click());
+    document.getElementById('filePicker').addEventListener('change', handleFileSelect);
+    document.getElementById('sendBtn').addEventListener('click', sendPrompt);
+    document.getElementById('promptInput').addEventListener('input', autoResizeInput);
+    document.getElementById('promptInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey && window.innerWidth > 768) {
+        e.preventDefault();
+        sendPrompt();
+      }
+    });
+
+    async function loadZoomDirectory() {
+      try {
+        const res = await apiFetch('/api/rep/zoom/directory');
+        const sel = document.getElementById('zoomTeamSelect');
+        if (!sel || !res.contacts) return;
+        sel.innerHTML = `<option value="">— Pick Teammate or Type # —</option>` + res.contacts.map(c =>
+          `<option value="${esc(c.zoom_phone)}">${esc(c.name)} (${esc(c.display_phone)} • Ext ${esc(c.extension)})</option>`
+        ).join('');
+      } catch (_) {}
+    }
+
+    async function loadZoomInbox() {
+      const box = document.getElementById('zoomInboxList');
+      if (!box) return;
+      box.innerHTML = `<div style="color:#94a3b8;padding:12px;text-align:center;">Loading Zoom SMS threads...</div>`;
+      try {
+        const res = await apiFetch('/api/rep/zoom/inbox?limit=8');
+        const threads = res.threads || [];
+        if (!threads.length) {
+          box.innerHTML = `<div style="color:#94a3b8;padding:12px;text-align:center;">No recent Zoom SMS sessions found.</div>`;
+          return;
+        }
+        box.innerHTML = threads.map(t => {
+          const replyPhone = (t.participants && t.participants[0] && t.participants[0].phone) ? t.participants[0].phone : '';
+          const msgsHtml = (t.messages || []).slice(-3).map(m =>
+            `<div style="margin-top:4px;padding:5px 8px;border-radius:7px;background:${m.direction==='sent'?'rgba(16,185,129,0.14)':'rgba(30,41,59,0.85)'};">
+              <span style="font-size:10.5px;color:#94a3b8;">${esc(m.direction==='sent'?'You':m.from)} • ${esc((m.time||'').replace('T',' ').slice(0,16))}</span>
+              <div style="margin-top:2px;white-space:pre-wrap;">${esc(m.text)}</div>
+            </div>`
+          ).join('');
+          return `<div style="background:rgba(15,23,42,0.75);border:1px solid rgba(148,163,184,0.16);border-radius:10px;padding:9px 11px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <strong style="color:#f8fafc;font-size:12.5px;">${esc(t.with)}</strong>
+              ${replyPhone ? `<button type="button" class="mini-btn primary" style="margin:0;padding:3px 8px;font-size:11px;" onclick="document.getElementById('zoomToInput').value='${esc(replyPhone)}';document.getElementById('zoomMsgInput').focus();">↩ Reply</button>` : ''}
+            </div>
+            ${msgsHtml || '<div style="font-size:11.5px;color:#64748b;margin-top:4px;">No recent text preview</div>'}
+          </div>`;
+        }).join('');
+      } catch (e) {
+        box.innerHTML = `<div style="color:#fca5a5;padding:10px;">${esc(e.message)}</div>`;
+      }
+    }
+
+    function openZoomModal() {
+      closeMobileDrawer();
+      const modal = document.getElementById('zoomSmsModal');
+      modal.style.display = 'flex';
+      document.getElementById('zoomSendStatus').textContent = '';
+      loadZoomDirectory();
+      loadZoomInbox();
+    }
+
+    async function sendZoomFromModal() {
+      const toVal = document.getElementById('zoomToInput').value.trim();
+      const msgVal = document.getElementById('zoomMsgInput').value.trim();
+      const incSig = document.getElementById('zoomSigCheck').checked;
+      const st = document.getElementById('zoomSendStatus');
+      const btn = document.getElementById('sendZoomNowBtn');
+      if (!toVal || !msgVal) {
+        st.style.color = '#fca5a5';
+        st.textContent = 'Enter both a recipient phone/teammate and a message.';
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      st.style.color = '#94a3b8';
+      st.textContent = 'Sending through Zoom Phone...';
+      try {
+        const res = await apiFetch('/api/rep/zoom/send', {
+          method: 'POST',
+          body: JSON.stringify({ to: toVal, message: msgVal, include_signature: incSig, conversation_id: state.activeConvId || '' })
+        });
+        st.style.color = '#6ee7b7';
+        st.textContent = `✅ Delivered via Zoom Phone to ${res.recipient} (${res.to_phone})!`;
+        document.getElementById('zoomMsgInput').value = '';
+        setTimeout(loadZoomInbox, 1500);
+      } catch (e) {
+        st.style.color = '#fca5a5';
+        st.textContent = `❌ ${e.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '📲 Send via Zoom';
+      }
+    }
+
+    document.getElementById('sidebarZoomBtn').addEventListener('click', openZoomModal);
+    document.getElementById('topZoomBtn').addEventListener('click', openZoomModal);
+    document.getElementById('closeZoomModalBtn').addEventListener('click', () => {
+      document.getElementById('zoomSmsModal').style.display = 'none';
+    });
+    document.getElementById('zoomTeamSelect').addEventListener('change', e => {
+      if (e.target.value) document.getElementById('zoomToInput').value = e.target.value;
+    });
+    document.getElementById('refreshZoomInboxBtn').addEventListener('click', loadZoomInbox);
+    document.getElementById('sendZoomNowBtn').addEventListener('click', sendZoomFromModal);
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    if (state.pin) {
+      document.getElementById('pinField').value = state.pin;
+      tryUnlock(state.pin);
+    }
+    setInterval(() => {
+      if (state.pin && state.apiBase && !state.busy && !state.ndaLocked) refreshBootstrap().catch(() => {});
+    }, 15000);
+  </script>
+</body>
+</html>

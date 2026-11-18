@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cyber Sentinel" />
+  <meta name="theme-color" content="#050914" />
+  <title>Cyber Sentinel | AI Security, Data Protection & Managed Cyber Defense for Growing Businesses</title>
+  <style>
+    :root {
+      --bg: #050914;
+      --bg-elev: #0a1122;
+      --card: #0f192f;
+      --card-hi: #152342;
+      --border: rgba(148, 163, 184, 0.15);
+      --border-hi: rgba(56, 189, 248, 0.45);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --blue: #2563eb;
+      --blue-hi: #3b82f6;
+      --cyan: #38bdf8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font-family: inherit; }
+
+    /* Navigation */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5, 9, 20, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1220px; margin: 0 auto; padding: 13px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 18px; letter-spacing: -0.02em; cursor: pointer; }
+    .shield-mark {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.45);
+      font-size: 17px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .nav-link {
+      padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      color: var(--muted); cursor: pointer; transition: all 0.15s; border: none; background: transparent;
+    }
+    .nav-link:hover, .nav-link.active { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-cta { display: flex; align-items: center; gap: 8px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; border: 1px solid var(--border); background: var(--card); color: #fff;
+      transition: transform 0.12s, border-color 0.15s, background 0.15s;
+    }
+    .btn:hover { border-color: rgba(255,255,255,0.28); background: var(--card-hi); }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #0284c7);
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.32);
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #1d4ed8, #0369a1); }
+    .btn-sm { padding: 6px 11px; font-size: 12px; border-radius: 8px; }
+    .btn-danger { background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+
+    /* Marketing Layout */
+    .section { max-width: 1180px; margin: 0 auto; padding: 64px 20px; }
+    .hero {
+      padding: 76px 20px 56px;
+      background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.18), transparent 62%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 13px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+      background: rgba(37, 99, 235, 0.14); border: 1px solid rgba(56, 189, 248, 0.32);
+      color: var(--cyan); letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 18px;
+    }
+    .h1 {
+      font-size: clamp(30px, 5vw, 54px); font-weight: 900; letter-spacing: -0.03em;
+      line-height: 1.08; margin: 0 auto 18px; max-width: 900px;
+    }
+    .grad { background: linear-gradient(135deg, #fff 30%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .lead { font-size: clamp(15px, 2vw, 18.5px); color: var(--muted); max-width: 740px; margin: 0 auto 28px; }
+    .hero-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 38px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px;
+    }
+    .card-featured {
+      border-color: var(--border-hi);
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), var(--card));
+      box-shadow: 0 12px 36px rgba(2, 132, 199, 0.14);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 17px; font-weight: 800; }
+    .card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+    .sec-head { text-align: center; max-width: 720px; margin: 0 auto 38px; }
+    .sec-head h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 900; letter-spacing: -0.02em; margin: 0 0 10px; }
+    .sec-head p { color: var(--muted); font-size: 15px; margin: 0; }
+
+    .tag {
+      display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10.5px;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .tag-crit { background: rgba(239,68,68,0.16); color: #fca5a5; border: 1px solid rgba(239,68,68,0.35); }
+    .tag-high { background: rgba(245,158,11,0.16); color: #fcd34d; border: 1px solid rgba(245,158,11,0.35); }
+    .tag-med { background: rgba(56,189,248,0.15); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.35); }
+    .tag-ok { background: rgba(16,185,129,0.16); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.35); }
+    .tag-sim { background: rgba(148,163,184,0.14); color: #cbd5e1; border: 1px dashed rgba(148,163,184,0.4); }
+
+    .price-num { font-size: 38px; font-weight: 900; margin: 12px 0 4px; letter-spacing: -0.03em; }
+    .price-num span { font-size: 14px; color: var(--muted); font-weight: 600; }
+    .feat-list { list-style: none; padding: 0; margin: 16px 0 22px; font-size: 13.5px; color: #cbd5e1; }
+    .feat-list li { padding: 6px 0; display: flex; align-items: flex-start; gap: 8px; }
+    .feat-list li::before { content: "✓"; color: var(--cyan); font-weight: 900; }
+
+    /* SaaS App Shell */
+    .app-layout {
+      display: grid; grid-template-columns: 250px 1fr; min-height: calc(100vh - 63px);
+    }
+    @media (max-width: 860px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .app-sidebar { display: flex; overflow-x: auto; border-right: none !important; border-bottom: 1px solid var(--border); padding: 10px !important; gap: 6px; }
+      .app-sidebar .sb-group-lbl { display: none; }
+      .app-nav-btn { white-space: nowrap; width: auto !important; margin-bottom: 0 !important; }
+    }
+    .app-sidebar {
+      background: var(--bg-elev); border-right: 1px solid var(--border); padding: 18px 12px;
+    }
+    .sb-group-lbl {
+      font-size: 10px; font-weight: 800; color: var(--dim); text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 8px 10px 6px;
+    }
+    .app-nav-btn {
+      width: 100%; text-align: left; padding: 9px 12px; border-radius: 9px; border: 1px solid transparent;
+      background: transparent; color: var(--muted); font-size: 13px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;
+    }
+    .app-nav-btn:hover { color: #fff; background: rgba(255,255,255,0.04); }
+    .app-nav-btn.active {
+      color: #fff; background: rgba(37, 99, 235, 0.18); border-color: rgba(56, 189, 248, 0.38);
+    }
+    .app-main { padding: 24px 22px 64px; max-width: 1120px; width: 100%; margin: 0 auto; }
+
+    .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 16px; }
+    .kpi-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; }
+    .kpi-val { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: -0.02em; }
+    .kpi-sub { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+
+    .inp, .sel, .txt {
+      width: 100%; background: var(--bg-elev); border: 1px solid var(--border); color: #fff;
+      border-radius: 10px; padding: 10px 12px; font-size: 13.5px; outline: none;
+    }
+    .inp:focus, .sel:focus, .txt:focus { border-color: var(--cyan); }
+    label.lbl { display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 5px; }
+
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.tbl th {
+      text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--border);
+    }
+    table.tbl td { padding: 12px; border-bottom: 1px solid rgba(148,163,184,0.08); vertical-align: middle; }
+
+    .footer {
+      border-top: 1px solid var(--border); background: var(--bg-elev); padding: 44px 20px;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-inner {
+      max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .modal-bg {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(3, 6, 14, 0.82); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-box {
+      width: 100%; max-width: 460px; background: var(--card); border: 1px solid var(--border-hi);
+      border-radius: 16px; padding: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+    }
+
+    @media print {
+      .navbar, .app-sidebar, .no-print { display: none !important; }
+      body, .card, .app-main { background: #fff !important; color: #0f172a !important; }
+      .card { border: 1px solid #cbd5e1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand" onclick="setMode('site','home')">
+        <span class="shield-mark">🛡️</span>
+        <div>
+          <div>CYBER <span style="color:var(--cyan)">SENTINEL</span></div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0.04em">AI SECURITY &amp; DATA PROTECTION</div>
+        </div>
+      </div>
+
+      <div class="nav-links" id="publicNavLinks">
+        <button class="nav-link active" data-page="home" onclick="setMode('site','home')">Home</button>
+        <button class="nav-link" data-page="solutions" onclick="setMode('site','solutions')">Solutions &amp; Architecture</button>
+        <button class="nav-link" data-page="pricing" onclick="setMode('site','pricing')">Pricing</button>
+        <button class="nav-link" data-page="about" onclick="setMode('site','about')">About &amp; Roadmap</button>
+        <button class="nav-link" data-page="contact" onclick="setMode('site','contact')">Contact</button>
+      </div>
+
+      <div class="nav-cta" id="navRightArea"></div>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <div id="viewport"></div>
+
+  <!-- Auth / Onboarding Modal -->
+  <div class="modal-bg" id="authModal">
+    <div class="modal-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h3 style="margin:0;font-size:18px;font-weight:900" id="authModalTitle">Launch Cyber Sentinel SaaS Portal</h3>
+        <button class="btn btn-sm" onclick="closeAuthModal()">✕</button>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 14px">
+        Sign in to your organization's tenant-isolated dashboard or create a new pilot workspace.
+      </p>
+      <div style="margin-bottom:10px">
+        <label class="lbl">Company / Organization Name</label>
+        <input class="inp" id="authCompany" value="Apex Builders &amp; Construction LLC" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <label class="lbl">Your Full Name</label>
+          <input class="inp" id="authName" value="Jordan Culliver" />
+        </div>
+        <div>
+          <label class="lbl">Role Experience</label>
+          <select class="sel" id="authRole">
+            <option value="org_admin">Company Admin (Customer)</option>
+            <option value="employee">Employee (DLP &amp; Training)</option>
+            <option value="super_admin">Cyber Sentinel Founder Admin</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label class="lbl">Work Email</label>
+        <input class="inp" id="authEmail" type="email" value="jordan@cybersentinel.io" />
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:11px" onclick="completeLogin()">
+        🔐 Enter Secure SaaS Workspace →
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'cyber_sentinel_saas_v1';
+
+    const DEFAULT_STATE = {
+      mode: 'site',         // 'site' | 'app'
+      sitePage: 'home',     // 'home' | 'solutions' | 'pricing' | 'about' | 'contact'
+      appTab: 'overview',   // 'overview' | 'dlp' | 'tools' | 'alerts' | 'assessment' | 'employees' | 'reports' | 'billing' | 'superadmin'
+      session: null,
+      org: {
+        name: 'Apex Builders & Construction LLC',
+        industry: 'Construction & Contracting (32 Employees)',
+        plan: 'Business',
+        price: 249,
+        seatLimit: 50,
+        mfaEnforced: true,
+        policyVersion: 'v2.1 — Construction & Client Data AI Policy'
+      },
+      policyRules: {
+        blockSsnTaxId: true,
+        blockBidMargins: true,
+        blockClientPii: true,
+        blockBankRouting: true,
+        blockSourceSecrets: true,
+        requireEmployeeSignoff: true
+      },
+      aiTools: [
+        { id: 't1', name: 'Microsoft Copilot (Enterprise Commercial)', vendor: 'Microsoft', category: 'Workspace AI', status: 'Approved', conn: 'Permissioned M365 Graph', users: 19 },
+        { id: 't2', name: 'ChatGPT Team / Business', vendor: 'OpenAI', category: 'LLM Assistant', status: 'Approved', conn: 'SSO + Zero-Training Policy', users: 14 },
+        { id: 't3', name: 'Personal Free ChatGPT Accounts', vendor: 'OpenAI (Consumer)', category: 'Unmanaged LLM', status: 'Restricted', conn: 'Policy Blocked', users: 0 },
+        { id: 't4', name: 'Unverified Browser PDF/Bid Summarizers', vendor: '3rd-Party Web', category: 'Shadow AI', status: 'Restricted', conn: 'Flagged Risk', users: 2 },
+        { id: 't5', name: 'Claude for Work', vendor: 'Anthropic', category: 'Document Analysis', status: 'Approved', conn: 'Admin Approved', users: 6 }
+      ],
+      alerts: [
+        {
+          id: 'ALT-1042',
+          source: 'Simulated Demo Event',
+          severity: 'Critical',
+          time: 'Today, 2:14 PM EST',
+          title: 'Subcontractor Bid Margin & Homeowner SSN Detected in Prompt Pre-Check',
+          detail: 'Estimator attempted to paste a raw residential bid spreadsheet containing homeowner SSN and 34% gross margin formula into an unapproved personal AI tab.',
+          action: 'Redact PII/financial columns via Cyber Sentinel DLP Pre-Check and switch to approved ChatGPT Team workspace.',
+          status: 'Open'
+        },
+        {
+          id: 'ALT-1041',
+          source: 'Simulated Demo Event',
+          severity: 'High',
+          time: 'Yesterday, 4:48 PM EST',
+          title: 'Unapproved Shadow AI Extension Detected During Risk Audit',
+          detail: '2 field laptops reported usage of an unverified free browser AI meeting recorder lacking SOC 2 or zero-data-retention controls.',
+          action: 'Move tool to Restricted list and require employee completion of Lesson 2 (Protecting Bid & Client Data).',
+          status: 'Acknowledged'
+        },
+        {
+          id: 'ALT-1039',
+          source: 'Simulated Demo Event',
+          severity: 'Medium',
+          time: 'Nov 14, 11:05 AM EST',
+          title: '3 New Field Employees Pending AI Security Policy Acknowledgment',
+          detail: 'Newly onboarded project coordinators have not yet signed the v2.1 Company AI Acceptable Use Policy.',
+          action: 'Send automated policy sign-off reminder from Employee Management.',
+          status: 'Open'
+        }
+      ],
+      employees: [
+        { id: 'e1', name: 'Jordan Culliver', email: 'jordan@cybersentinel.io', role: 'Org Admin', dept: 'Leadership', policySigned: true, trainingPct: 100 },
+        { id: 'e2', name: 'Marcus Vance', email: 'mvance@apexbuilders-demo.com', role: 'Senior Estimator', dept: 'Estimating', policySigned: true, trainingPct: 100 },
+        { id: 'e3', name: 'Rachel Sterling', email: 'rsterling@apexbuilders-demo.com', role: 'Controller', dept: 'Accounting', policySigned: true, trainingPct: 80 },
+        { id: 'e4', name: 'Devon Brooks', email: 'dbrooks@apexbuilders-demo.com', role: 'Project Manager', dept: 'Field Ops', policySigned: false, trainingPct: 40 },
+        { id: 'e5', name: 'Kayla Nguyen', email: 'knguyen@apexbuilders-demo.com', role: 'Coordinator', dept: 'Operations', policySigned: false, trainingPct: 60 }
+      ],
+      lessonsCompleted: [true, true, false, false, false],
+      assessmentScore: 78,
+      assessmentAnswers: [true, true, true, false, true, true, false, true, true, true],
+      demoLeads: [],
+      tenants: [
+        { id: 'ORG-01', name: 'Apex Builders & Construction LLC', industry: 'Construction', employees: 32, plan: 'Business ($249/mo)', status: 'Active Pilot', score: 84 },
+        { id: 'ORG-02', name: 'Great Lakes Mechanical & HVAC', industry: 'Specialty Trade', employees: 18, plan: 'Business ($249/mo)', status: 'Active Pilot', score: 79 },
+        { id: 'ORG-03', name: 'Oakland CPA & Advisory Group', industry: 'Accounting', employees: 9, plan: 'Starter ($99/mo)', status: 'Onboarding', score: 71 },
+        { id: 'ORG-04', name: 'Midwest Title & Realty Partners', industry: 'Real Estate', employees: 64, plan: 'Enterprise ($499/mo)', status: 'Demo Trial', score: 88 }
+      ]
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+      } catch (_) {}
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+    let S = loadState();
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (_) {}
+    }
+
+    function openAuthModal(prefPlan) {
+      if (prefPlan) {
+        S.org.plan = prefPlan.name;
+        S.org.price = prefPlan.price;
+        S.org.seatLimit = prefPlan.seats;
+        saveState();
+      }
+      document.getElementById('authModal').style.display = 'flex';
+    }
+    function closeAuthModal() {
+      document.getElementById('authModal').style.display = 'none';
+    }
+    function completeLogin() {
+      const comp = document.getElementById('authCompany').value.trim() || 'Apex Builders LLC';
+      const name = document.getElementById('authName').value.trim() || 'Jordan Culliver';
+      const role = document.getElementById('authRole').value;
+      const email = document.getElementById('authEmail').value.trim() || 'jordan@cybersentinel.io';
+      S.org.name = comp;
+      S.session = { name, role, email };
+      S.mode = 'app';
+      S.appTab = role === 'super_admin' ? 'superadmin' : (role === 'employee' ? 'dlp' : 'overview');
+      saveState();
+      closeAuthModal();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function logoutApp() {
+      S.mode = 'site';
+      saveState();
+      render();
+    }
+
+    function setMode(mode, pageOrTab) {
+      S.mode = mode;
+      if (mode === 'site') S.sitePage = pageOrTab || 'home';
+      else S.appTab = pageOrTab || 'overview';
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function computePostureScore() {
+      const openCrit = S.alerts.filter(a => a.status !== 'Resolved' && a.severity === 'Critical').length;
+      const openHigh = S.alerts.filter(a => a.status !== 'Resolved' && a.severity === 'High').length;
+      const signedPct = S.employees.length ? (S.employees.filter(e => e.policySigned).length / S.employees.length) : 1;
+      const avgTrain = S.employees.length ? (S.employees.reduce((a, e) => a + e.trainingPct, 0) / S.employees.length) : 80;
+      let raw = 62 + Math.round(signedPct * 18) + Math.round((avgTrain / 100) * 18) - (openCrit * 9) - (openHigh * 4);
+      return Math.max(35, Math.min(99, raw));
+    }
+
+    function renderNav() {
+      const pubLinks = document.getElementById('publicNavLinks');
+      const right = document.getElementById('navRightArea');
+      if (S.mode === 'site') {
+        pubLinks.style.display = 'flex';
+        pubLinks.querySelectorAll('.nav-link').forEach(b => {
+          b.classList.toggle('active', b.dataset.page === S.sitePage);
+        });
+        right.innerHTML = `
+          <button class="btn btn-sm" onclick="openAuthModal()">Customer Login</button>
+          <button class="btn btn-sm btn-primary" onclick="openAuthModal()">Get Protected →</button>
+        `;
+      } else {
+        pubLinks.style.display = 'none';
+        const roleBadge = S.session?.role === 'super_admin' ? 'Founder Super-Admin' : (S.session?.role === 'employee' ? 'Employee View' : 'Org Admin');
+        right.innerHTML = `
+          <span class="tag tag-med">${roleBadge}</span>
+          <select class="sel" style="width:auto;padding:5px 9px;font-size:12px" onchange="switchRoleLive(this.value)" title="Switch RBAC View">
+            <option value="org_admin" ${S.session?.role==='org_admin'?'selected':''}>View: Customer Admin</option>
+            <option value="employee" ${S.session?.role==='employee'?'selected':''}>View: Employee Portal</option>
+            <option value="super_admin" ${S.session?.role==='super_admin'?'selected':''}>View: Cyber Sentinel Admin</option>
+          </select>
+          <button class="btn btn-sm" onclick="logoutApp()">← Public Site</button>
+        `;
+      }
+    }
+
+    function switchRoleLive(r) {
+      if (!S.session) S.session = { name: 'Jordan Culliver', email: 'jordan@cybersentinel.io', role: r };
+      S.session.role = r;
+      if (r === 'super_admin') S.appTab = 'superadmin';
+      else if (r === 'employee' && S.appTab === 'superadmin') S.appTab = 'dlp';
+      else if (r === 'org_admin' && S.appTab === 'superadmin') S.appTab = 'overview';
+      saveState();
+      render();
+    }
+
+    /* ==================== PUBLIC MARKETING SITE PAGES ==================== */
+    function renderFooter() {
+      return `
+        <footer class="footer">
+          <div class="footer-inner">
+            <div style="max-width:380px">
+              <div style="font-weight:900;font-size:16px;color:#fff;margin-bottom:6px">🛡️ CYBER SENTINEL</div>
+              <div>AI Security, Data Loss Prevention &amp; NIST-Aligned Cyber Defense for Growing Businesses across the United States.</div>
+              <div style="margin-top:10px;color:#e2e8f0;font-weight:600">
+                📍 29610 Southfield Rd, Southfield, MI 48076<br/>
+                📞 (248) 996-1779 • ✉️ contact@cybersentinel-security.com
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:800;color:#fff;margin-bottom:8px">Platform</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <a href="javascript:void(0)" onclick="setMode('site','solutions')">AI Data Protection &amp; DLP</a>
+                <a href="javascript:void(0)" onclick="setMode('site','solutions')">4-Tier MDR / EDR / Zero-Trust</a>
+                <a href="javascript:void(0)" onclick="setMode('site','pricing')">Subscription Plans</a>
+                <a href="javascript:void(0)" onclick="openAuthModal()">Customer SaaS Dashboard</a>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:800;color:#fff;margin-bottom:8px">Industries Served</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <span>Construction &amp; Specialty Contractors (10–100+ Staff)</span>
+                <span>Accounting &amp; CPA Practices</span>
+                <span>Real Estate, Title &amp; Property Management</span>
+                <span>Healthcare, Insurance &amp; Financial Advisory</span>
+              </div>
+            </div>
+          </div>
+          <div style="max-width:1180px;margin:26px auto 0;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px">
+            <span>© ${new Date().getFullYear()} Cyber Sentinel. Built aligned with the NIST Cybersecurity Framework (CSF 2.0).</span>
+            <span>Permission-Based Governance • Encryption in Transit &amp; At Rest • Tenant-Isolated RBAC</span>
+          </div>
+        </footer>
+      `;
+    }
+
+    function renderPricingSection() {
+      return `
+        <div class="sec-head">
+          <div class="eyebrow">Transparent SaaS Subscriptions</div>
+          <h2>Enterprise-Grade AI Protection Built for SMB Budgets</h2>
+          <p>Start protecting confidential bids, client PII, contracts, and financial data in minutes — scale seamlessly as your team grows.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <span class="tag tag-med">Starter</span>
+            <div class="price-num">$99<span>/month</span></div>
+            <p>Ideal for nimble contractors &amp; local offices up to 10 employees.</p>
+            <ul class="feat-list">
+              <li>Up to <strong>10 employee seats</strong></li>
+              <li>Custom AI Security &amp; Acceptable Use Policies</li>
+              <li>Employee Policy Sign-Off Tracking</li>
+              <li>Foundational NIST &amp; AI Risk Assessments</li>
+              <li>Automated Monthly Security Summary PDF</li>
+            </ul>
+            <button class="btn" style="width:100%" onclick="openAuthModal({name:'Starter',price:99,seats:10})">Start Starter Plan</button>
+          </div>
+
+          <div class="card card-featured">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span class="tag tag-ok">Business • Most Popular</span>
+              <span style="font-size:11px;color:var(--cyan);font-weight:800">10–50 Staff</span>
+            </div>
+            <div class="price-num">$249<span>/month</span></div>
+            <p>Full AI Security Dashboard, training &amp; alerting for growing companies.</p>
+            <ul class="feat-list">
+              <li>Up to <strong>50 employee seats</strong></li>
+              <li>Full <strong>Cyber Sentinel SaaS Dashboard</strong></li>
+              <li>Interactive AI Prompt DLP Pre-Check Scanner</li>
+              <li>5-Module Employee AI Security Training &amp; Quiz</li>
+              <li>Supported Integration Risk Alerts &amp; Monthly PDF Reports</li>
+            </ul>
+            <button class="btn btn-primary" style="width:100%" onclick="openAuthModal({name:'Business',price:249,seats:50})">Get Protected — $249/mo →</button>
+          </div>
+
+          <div class="card">
+            <span class="tag tag-high">Enterprise</span>
+            <div class="price-num">$499<span>+/month</span></div>
+            <p>For multi-site builders, regional firms &amp; regulated industries (50–250+ staff).</p>
+            <ul class="feat-list">
+              <li><strong>50 to 250+ employee seats</strong> &amp; multi-branch RBAC</li>
+              <li>Custom Industry Compliance Policies (NIST / HIPAA / SOC 2 prep)</li>
+              <li>EDR / XDR, M365 &amp; Google Workspace Integration Architecture</li>
+              <li>Advanced Executive &amp; Board Risk Reporting</li>
+              <li>Priority vCISO Advisory &amp; Incident Playbooks</li>
+            </ul>
+            <button class="btn" style="width:100%" onclick="setMode('site','contact')">Request Enterprise Demo</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomePage() {
+      return `
+        <section class="hero">
+          <div class="hero-inner">
+            <div class="eyebrow">🛡️ AI Data Protection &amp; Cyber Defense for Growing Businesses</div>
+            <h1 class="h1"><span class="grad">Let Your Team Use AI Fast — Without Leaking Confidential Company Data.</span></h1>
+            <p class="lead">
+              Employees paste estimates, blueprints, client SSNs, payroll, and contracts into ChatGPT and Copilot every day.
+              <strong>Cyber Sentinel</strong> gives 10–100+ employee businesses written AI governance, pre-submission sensitive data scanning, employee training, and NIST-aligned security monitoring in one clean SaaS platform.
+            </p>
+            <div class="hero-btns">
+              <button class="btn btn-primary" style="padding:13px 24px;font-size:14.5px" onclick="openAuthModal()">🛡️ Get Protected — Launch Live SaaS App</button>
+              <button class="btn" style="padding:13px 22px;font-size:14.5px" onclick="setMode('site','contact')">📅 Request a Demo • (248) 996-1779</button>
+            </div>
+
+            <div class="grid-4" style="text-align:left;margin-top:20px">
+              <div class="card" style="padding:16px">
+                <div style="font-size:22px;font-weight:900;color:var(--cyan)">Zero Secret Spying</div>
+                <p style="font-size:12.5px;margin-top:4px">100% transparent, permission-based governance &amp; pre-check guardrails employees actually trust.</p>
+              </div>
+              <div class="card" style="padding:16px">
+                <div style="font-size:22px;font-weight:900;color:#fff">10–100+ Staff</div>
+                <p style="font-size:12.5px;margin-top:4px">Purpose-built for construction firms, CPAs, brokerages, clinics &amp; insurance agencies.</p>
+              </div>
+              <div class="card" style="padding:16px">
+                <div style="font-size:22px;font-weight:900;color:var(--green)">NIST CSF 2.0</div>
+                <p style="font-size:12.5px;margin-top:4px">Structured around Identify, Protect, Detect, Respond &amp; Recover best practices.</p>
+              </div>
+              <div class="card" style="padding:16px">
+                <div style="font-size:22px;font-weight:900;color:var(--amber)">5-Minute Setup</div>
+                <p style="font-size:12.5px;margin-top:4px">Deploy policies, run your baseline risk score, and train staff the same afternoon.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="sec-head">
+            <div class="eyebrow">The Hidden SMB Risk</div>
+            <h2>Why Unmanaged Employee AI Usage Threatens Growing Companies</h2>
+            <p>One copy-pasted spreadsheet or contract into a consumer AI account can permanently expose your competitive bids, client PII, or banking details.</p>
+          </div>
+          <div class="grid-3">
+            <div class="card">
+              <h3>🏗️ Construction Bids &amp; Subcontractor Pricing</h3>
+              <p>Estimators and PMs use AI to rewrite scopes and summarize specs — unintentionally uploading proprietary margin formulas, blueprints, and homeowner records to public model training queues.</p>
+            </div>
+            <div class="card">
+              <h3>🔓 Shadow AI &amp; Unvetted Browser Extensions</h3>
+              <p>Without an approved AI catalog, employees sign up for free PDF summarizers and meeting bots that request broad read permissions across Microsoft 365 and Google Drive.</p>
+            </div>
+            <div class="card">
+              <h3>🎣 AI-Powered Invoice &amp; Wire Fraud</h3>
+              <p>Attackers now use voice-cloning and LLM spear-phishing to impersonate GCs, vendors, and executives on ACH change-order requests. Untrained staff are the #1 breach vector.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" style="padding-top:10px">
+          <div class="sec-head">
+            <div class="eyebrow">Built for Real Main-Street &amp; Mid-Market Teams</div>
+            <h2>Starting in Construction — Scaling Across Regulated Industries</h2>
+          </div>
+          <div class="grid-3">
+            <div class="card card-featured">
+              <span class="tag tag-ok">Flagship Vertical</span>
+              <h3 style="margin-top:10px">Construction, Remodeling &amp; Specialty Trades</h3>
+              <p>Protect job bids, architectural drawings, homeowner financing records, and subcontractor agreements across office estimators and field PMs.</p>
+            </div>
+            <div class="card">
+              <span class="tag tag-med">Financial &amp; Tax</span>
+              <h3 style="margin-top:10px">Accounting Firms &amp; Insurance Agencies</h3>
+              <p>Prevent W-2s, EIN/SSNs, tax returns, and policy underwriting files from entering consumer AI tools.</p>
+            </div>
+            <div class="card">
+              <span class="tag tag-med">Property &amp; Clinical</span>
+              <h3 style="margin-top:10px">Real Estate, Title &amp; Healthcare Practices</h3>
+              <p>Enforce wire-fraud awareness, closing-disclosure DLP rules, and HIPAA-conscious AI usage boundaries.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" style="padding-top:10px">
+          ${renderPricingSection()}
+        </section>
+
+        <section class="section" style="padding-top:10px">
+          <div class="sec-head">
+            <div class="eyebrow">Early Adopter Feedback</div>
+            <h2>Pilot Partner Perspectives</h2>
+            <p>Clearly labeled pilot program placeholders — replaced with verified named case studies upon commercial pilot sign-off.</p>
+          </div>
+          <div class="grid-3">
+            <div class="card">
+              <span class="tag tag-sim">Placeholder — Pilot Slot #1 (Construction)</span>
+              <p style="margin-top:12px;font-style:italic">"Reserved for 25–60 employee General Contractor / Remodeling pilot partner testimonial measuring policy sign-off speed and bid-data DLP catches."</p>
+              <div style="margin-top:12px;font-size:12px;font-weight:700;color:#cbd5e1">— Commercial Construction Pilot Partner (Southeast MI)</div>
+            </div>
+            <div class="card">
+              <span class="tag tag-sim">Placeholder — Pilot Slot #2 (CPA / Finance)</span>
+              <p style="margin-top:12px;font-style:italic">"Reserved for regional Accounting / Tax Advisory pilot partner feedback on client SSN pre-check redaction and monthly executive compliance PDFs."</p>
+              <div style="margin-top:12px;font-size:12px;font-weight:700;color:#cbd5e1">— Accounting &amp; Advisory Pilot Partner</div>
+            </div>
+            <div class="card">
+              <span class="tag tag-sim">Placeholder — Pilot Slot #3 (Real Estate / Title)</span>
+              <p style="margin-top:12px;font-style:italic">"Reserved for multi-agent Brokerage / Title firm pilot feedback on AI wire-scam training modules and Shadow AI governance."</p>
+              <div style="margin-top:12px;font-size:12px;font-weight:700;color:#cbd5e1">— Real Estate Operations Pilot Partner</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" style="padding-top:10px">
+          <div class="sec-head">
+            <h2>Frequently Asked Questions</h2>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Does Cyber Sentinel secretly keylog or spy on employees?</h3>
+              <p>No — never. Cyber Sentinel uses transparent, disclosed company policies, employee-side pre-check DLP scanning, and permissioned admin workspace integrations. Employees know exactly what is approved and why.</p>
+            </div>
+            <div class="card">
+              <h3>Do we need an internal IT department to run Cyber Sentinel?</h3>
+              <p>No. Cyber Sentinel is designed for 10–100 employee businesses where an Owner, Operations VP, or Office Manager can roll out policies, training, and risk scoring in under 15 minutes.</p>
+            </div>
+            <div class="card">
+              <h3>Can employees still use ChatGPT and Microsoft Copilot?</h3>
+              <p>Yes! Rather than blanket bans that push staff into secret personal accounts, Cyber Sentinel helps you approve business-tier AI tools while stripping SSNs, account numbers, and bid margins before prompts are sent.</p>
+            </div>
+            <div class="card">
+              <h3>How is customer data isolated between companies?</h3>
+              <p>Every customer organization runs in a tenant-isolated Role-Based Access Control (RBAC) boundary with encryption in transit (TLS 1.3) and at rest, and Stripe handles all payment credentials off-platform.</p>
+            </div>
+          </div>
+        </section>
+        ${renderFooter()}
+      `;
+    }
+
+    function renderSolutionsPage() {
+      return `
+        <section class="section">
+          <div class="sec-head">
+            <div class="eyebrow">Platform Capabilities &amp; 4-Tier Cyber Defense</div>
+            <h2>Complete AI Governance + Enterprise Security Architecture</h2>
+            <p>Combining SaaS AI Data Loss Prevention with NIST CSF 2.0 infrastructure hardening inspired by modern MDR/SOC standards.</p>
+          </div>
+          <div class="grid-3">
+            <div class="card card-featured">
+              <h3>1. AI Data Protection &amp; Pre-Check DLP</h3>
+              <p>Inspect prompts and pasted text for homeowner/client PII, SSNs, routing/card numbers, contracts, and bid margins before employees submit them to external LLMs — with 1-click safe redaction.</p>
+            </div>
+            <div class="card">
+              <h3>2. Approved vs. Restricted AI Catalog</h3>
+              <p>Maintain a live registry of sanctioned commercial tools (e.g., Copilot Commercial, ChatGPT Team) versus restricted Shadow AI browser plugins, with transparent permission-based status tracking.</p>
+            </div>
+            <div class="card">
+              <h3>3. AI &amp; NIST Security Risk Assessments</h3>
+              <p>Run structured 10-control evaluations across AI governance, phishing-resistant MFA, endpoint EDR coverage, and backup recovery — generating executive PDF reports for leadership and cyber insurers.</p>
+            </div>
+            <div class="card">
+              <h3>4. Employee AI Security Awareness</h3>
+              <p>Interactive 5-minute micro-courses and verification quizzes teaching office and field staff how to spot AI voice/invoice scams and use AI productivity tools safely.</p>
+            </div>
+            <div class="card">
+              <h3>5. Written AI Policies &amp; Sign-Off</h3>
+              <p>Industry-tailored AI Acceptable Use Policies (Construction, CPA, Real Estate, Healthcare) with digital employee acknowledgment tracking and audit timestamps.</p>
+            </div>
+            <div class="card">
+              <h3>6. 4-Tier MDR / EDR / IAM Readiness</h3>
+              <p>Guided implementation blueprints for Endpoint Detection &amp; Response (EDR), Zero-Trust Network Access (ZTNA), Hardware/App MFA, and centralized SIEM/SOC log triage.</p>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:34px">
+            <button class="btn btn-primary" onclick="openAuthModal()">Test All 6 Modules Live in the SaaS Dashboard →</button>
+          </div>
+        </section>
+        ${renderFooter()}
+      `;
+    }
+
+    function renderAboutPage() {
+      return `
+        <section class="section">
+          <div class="sec-head">
+            <div class="eyebrow">Mission &amp; Product Roadmap</div>
+            <h2>Securing How Growing American Businesses Adopt AI</h2>
+            <p>Headquartered in Southfield, Michigan, Cyber Sentinel bridges the gap between enterprise security operations and practical main-street business workflows.</p>
+          </div>
+          <div class="grid-2" style="margin-bottom:34px">
+            <div class="card">
+              <h3>Our Mission</h3>
+              <p>Small and mid-sized businesses are the backbone of construction, accounting, real estate, and healthcare — yet enterprise DLP suites cost $50,000+/year and require full-time security engineers. Cyber Sentinel delivers clear, honest, affordable AI security starting at $99/month.</p>
+            </div>
+            <div class="card">
+              <h3>Our Integrity Standard</h3>
+              <p>We believe cybersecurity requires absolute candor: permission-based employee governance (never covert spyware), transparent distinction between live scanners and pilot simulations, and alignment with the NIST Cybersecurity Framework.</p>
+            </div>
+          </div>
+
+          <h3 style="text-align:center;font-size:22px;font-weight:900;margin-bottom:18px">5-Phase Product &amp; Commercial Roadmap</h3>
+          <div class="grid-3">
+            <div class="card"><span class="tag tag-ok">Phase 1 — Live Foundation</span><h3 style="margin-top:8px">Brand, Auth &amp; Multi-Role Portal</h3><p>Enterprise web presence, role-based customer dashboard, tenant schema, and policy engine.</p></div>
+            <div class="card"><span class="tag tag-ok">Phase 2 — Live MVP</span><h3 style="margin-top:8px">DLP Pre-Check, Risk Audit &amp; PDF Reports</h3><p>Interactive sensitive-data prompt redactor, 10-point risk assessment, employee roster, and alert workflow.</p></div>
+            <div class="card"><span class="tag tag-med">Phase 3 — Pilot Cohort</span><h3 style="margin-top:8px">3–5 Construction &amp; SMB Pilots</h3><p>Onboard Southeast Michigan &amp; US pilot contractors, tune policy templates, and validate admin UX.</p></div>
+            <div class="card"><span class="tag tag-med">Phase 4 — API &amp; Browser Guard</span><h3 style="margin-top:8px">Opt-In Workspace &amp; Browser Connectors</h3><p>Signed Chrome/Edge extension warning before sensitive paste + M365 / Google Workspace OAuth audit logs.</p></div>
+            <div class="card"><span class="tag tag-high">Phase 5 — National Scale</span><h3 style="margin-top:8px">Stripe Billing &amp; Multi-Industry Verticals</h3><p>Automated Stripe subscriptions, CPA/Healthcare/Insurance compliance packs, and vCISO partner portal.</p></div>
+          </div>
+        </section>
+        ${renderFooter()}
+      `;
+    }
+
+    function submitContactDemo(e) {
+      e.preventDefault();
+      const lead = {
+        company: document.getElementById('cComp').value.trim(),
+        name: document.getElementById('cName').value.trim(),
+        email: document.getElementById('cEmail').value.trim(),
+        phone: document.getElementById('cPhone').value.trim(),
+        employees: document.getElementById('cEmp').value,
+        notes: document.getElementById('cNotes').value.trim(),
+        ts: new Date().toLocaleString()
+      };
+      S.demoLeads.unshift(lead);
+      saveState();
+      document.getElementById('contactSuccess').innerHTML = `
+        <div style="margin-top:12px;padding:12px;border-radius:10px;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;font-weight:700;font-size:13px">
+          ✓ Demo request recorded for <strong>${lead.company}</strong>! It is also visible inside the Founder Super-Admin Control Panel. For immediate assistance call <strong>(248) 996-1779</strong>.
+        </div>
+      `;
+      e.target.reset();
+    }
+
+    function renderContactPage() {
+      return `
+        <section class="section">
+          <div class="grid-2">
+            <div>
+              <div class="eyebrow">Schedule a Live Walkthrough</div>
+              <h2 style="font-size:34px;font-weight:900;margin:0 0 12px">Protect Your Company's AI Workflow Today</h2>
+              <p style="color:var(--muted);margin-bottom:22px">
+                Speak directly with our Southfield, Michigan team for a 15-minute live demonstration of Cyber Sentinel tailored to your employee count and industry.
+              </p>
+              <div class="card" style="margin-bottom:14px">
+                <h3>📍 Corporate Headquarters</h3>
+                <p style="color:#e2e8f0;font-weight:600;margin-top:4px">29610 Southfield Rd<br/>Southfield, MI 48076</p>
+              </div>
+              <div class="card">
+                <h3>📞 Direct Security &amp; Sales Desk</h3>
+                <p style="color:#e2e8f0;font-weight:700;font-size:16px;margin-top:4px"><a href="tel:12489961779" style="color:var(--cyan)">(248) 996-1779</a></p>
+                <p style="margin-top:4px">Email: contact@cybersentinel-security.com • Mon–Fri 8:30 AM – 6:00 PM EST</p>
+              </div>
+            </div>
+
+            <div class="card card-featured">
+              <h3>Request a Live Product Demonstration</h3>
+              <form onsubmit="submitContactDemo(event)" style="margin-top:14px;display:flex;flex-direction:column;gap:11px">
+                <div><label class="lbl">Company Name *</label><input class="inp" id="cComp" required placeholder="e.g. Horizon Construction Group" /></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div><label class="lbl">Your Name *</label><input class="inp" id="cName" required placeholder="Full Name" /></div>
+                  <div><label class="lbl">Phone Number *</label><input class="inp" id="cPhone" required placeholder="(248) 555-0199" /></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div><label class="lbl">Work Email *</label><input class="inp" type="email" id="cEmail" required placeholder="you@company.com" /></div>
+                  <div>
+                    <label class="lbl">Company Size</label>
+                    <select class="sel" id="cEmp">
+                      <option>1–10 Employees (Starter $99/mo)</option>
+                      <option selected>11–50 Employees (Business $249/mo)</option>
+                      <option>51–250+ Employees (Enterprise $499+/mo)</option>
+                    </select>
+                  </div>
+                </div>
+                <div><label class="lbl">Primary Security Goal</label><textarea class="txt" id="cNotes" rows="3" placeholder="e.g. Protecting construction estimates, client PII &amp; training 25 staff on safe ChatGPT/Copilot usage..."></textarea></div>
+                <button type="submit" class="btn btn-primary" style="padding:12px">Submit Demo Request →</button>
+              </form>
+              <div id="contactSuccess"></div>
+            </div>
+          </div>
+        </section>
+        ${renderFooter()}
+      `;
+    }
+
+    /* ==================== AUTHENTICATED SAAS DASHBOARD ==================== */
+    function runLiveDlpScan() {
+      const txt = document.getElementById('dlpInput').value || '';
+      const out = document.getElementById('dlpResultBox');
+      if (!txt.trim()) {
+        out.innerHTML = '<div style="color:var(--muted);font-size:13px">Paste a sample employee ChatGPT/Copilot prompt above to scan for sensitive company data.</div>';
+        return;
+      }
+      const findings = [];
+      let redacted = txt;
+
+      const rules = [
+        { on: S.policyRules.blockSsnTaxId, name: 'SSN / Federal Tax ID', sev: 'Critical', re: /\b\d{3}-\d{2}-\d{4}\b|\b\d{2}-\d{7}\b/g, mask: '[REDACTED-SSN/EIN]' },
+        { on: S.policyRules.blockBankRouting, name: 'Payment Card / Account Number', sev: 'Critical', re: /\b(?:\d[ -]*?){13,16}\b/g, mask: '[REDACTED-FINANCIAL-ACCT]' },
+        { on: S.policyRules.blockBidMargins, name: 'Internal Bid Margin / Markup Confidential Figure', sev: 'High', re: /\b(?:margin|markup|gross\s*profit|net\s*cost|sub\s*quote)\s*[:=]?\s*\$?\d+(?:\.\d+)?%?/gi, mask: '[REDACTED-INTERNAL-MARGIN]' },
+        { on: S.policyRules.blockClientPii, name: 'Client Email / Direct Phone PII', sev: 'Medium', re: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g, mask: '[REDACTED-CLIENT-CONTACT]' },
+        { on: S.policyRules.blockSourceSecrets, name: 'API Key / Secret Credential', sev: 'Critical', re: /\b(?:sk-[a-zA-Z0-9]{16,}|AIza[0-9A-Za-z-_]{20,}|ghp_[a-zA-Z0-9]{20,}|password\s*[:=]\s*\S+)/gi, mask: '[REDACTED-SECRET-KEY]' }
+      ];
+
+      rules.forEach(r => {
+        if (!r.on) return;
+        const matches = txt.match(r.re);
+        if (matches && matches.length) {
+          findings.push({ name: r.name, sev: r.sev, count: matches.length, samples: matches.slice(0, 3) });
+          redacted = redacted.replace(r.re, r.mask);
+        }
+      });
+
+      if (!findings.length) {
+        out.innerHTML = `
+          <div class="card" style="border-color:rgba(16,185,129,0.45);background:rgba(16,185,129,0.1)">
+            <span class="tag tag-ok">✓ Safe to Submit to Approved AI</span>
+            <p style="margin-top:8px;color:#d1fae5">Zero SSNs, financial card numbers, secret keys, client contact PII, or confidential margin figures detected under <strong>${S.org.policyVersion}</strong>.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Log live alert into Security Alerts table!
+      const topSev = findings.some(f => f.sev === 'Critical') ? 'Critical' : (findings.some(f => f.sev === 'High') ? 'High' : 'Medium');
+      S.alerts.unshift({
+        id: 'ALT-' + Math.floor(1050 + Math.random() * 8900),
+        source: 'Live DLP Pre-Check Engine',
+        severity: topSev,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' EST',
+        title: `Live Pre-Check Blocked ${findings.length} Sensitive Data Type(s) (${findings.map(f=>f.name).join(', ')})`,
+        detail: `User (${S.session?.name || 'Employee'}) scanned a ${txt.length}-char prompt containing sensitive company tokens prior to external LLM submission.`,
+        action: 'Use the auto-sanitized prompt generated below only inside an Approved commercial AI workspace.',
+        status: 'Open'
+      });
+      saveState();
+
+      out.innerHTML = `
+        <div class="card" style="border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.09)">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <span class="tag tag-crit">🛑 Sensitive Data Exposure Prevented (${findings.length} Rule Hit${findings.length>1?'s':''})</span>
+            <span style="font-size:11.5px;color:#fca5a5;font-weight:700">Logged to Security Alerts Console</span>
+          </div>
+          <ul style="margin:10px 0;padding-left:18px;font-size:13px;color:#fecaca">
+            ${findings.map(f => `<li><strong>${f.name}</strong> (${f.sev}) — ${f.count} match(es) detected</li>`).join('')}
+          </ul>
+          <label class="lbl" style="margin-top:10px;color:#a7f3d0">✓ Sanitized Safe Prompt (Ready to Copy for Approved AI):</label>
+          <textarea class="txt" id="sanitizedOut" rows="4" readonly style="border-color:rgba(16,185,129,0.45)">${redacted}</textarea>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText(document.getElementById('sanitizedOut').value);this.textContent='✓ Copied Safe Prompt!'">📋 Copy Redacted Prompt</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function loadSampleRiskyPrompt() {
+      document.getElementById('dlpInput').value =
+        "Summarize this residential remodel contract for homeowner Robert Miller (SSN 412-58-9921, phone 248-555-0148, email rmiller@oaklandhome.com). Sub quote: $42000, internal gross profit: 36%, margin: 36%. Please draft a polite project kickoff email.";
+      runLiveDlpScan();
+    }
+
+    function toggleToolStatus(id) {
+      const t = S.aiTools.find(x => x.id === id);
+      if (t) {
+        t.status = t.status === 'Approved' ? 'Restricted' : 'Approved';
+        saveState();
+        render();
+      }
+    }
+
+    function updateAlertStatus(id, st) {
+      const a = S.alerts.find(x => x.id === id);
+      if (a) { a.status = st; saveState(); render(); }
+    }
+
+    function addEmployee(e) {
+      e.preventDefault();
+      const name = document.getElementById('empName').value.trim();
+      const email = document.getElementById('empEmail').value.trim();
+      const role = document.getElementById('empRole').value;
+      const dept = document.getElementById('empDept').value.trim() || 'Operations';
+      if (!name || !email) return;
+      S.employees.push({ id: 'e' + Date.now(), name, email, role, dept, policySigned: false, trainingPct: 0 });
+      saveState();
+      render();
+    }
+
+    function completeLesson(idx) {
+      S.lessonsCompleted[idx] = true;
+      const pct = Math.round((S.lessonsCompleted.filter(Boolean).length / S.lessonsCompleted.length) * 100);
+      if (S.employees[0]) { S.employees[0].trainingPct = pct; S.employees[0].policySigned = true; }
+      saveState();
+      render();
+    }
+
+    function toggleAssessQ(idx) {
+      S.assessmentAnswers[idx] = !S.assessmentAnswers[idx];
+      S.assessmentScore = S.assessmentAnswers.filter(Boolean).length * 10;
+      saveState();
+      render();
+    }
+
+    function renderAppContent() {
+      const score = computePostureScore();
+      const openAlerts = S.alerts.filter(a => a.status !== 'Resolved').length;
+      const approvedCount = S.aiTools.filter(t => t.status === 'Approved').length;
+
+      if (S.appTab === 'overview') {
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+            <div>
+              <h2 style="margin:0;font-size:22px;font-weight:900">${S.org.name} — Security Overview</h2>
+              <div style="font-size:12.5px;color:var(--muted)">${S.org.industry} • Plan: <strong style="color:var(--cyan)">${S.org.plan} ($${S.org.price}/mo)</strong></div>
+            </div>
+            <div style="display:flex;gap:8px" class="no-print">
+              <button class="btn btn-sm" onclick="setMode('app','dlp')">🔍 Run DLP Prompt Scan</button>
+              <button class="btn btn-sm btn-primary" onclick="setMode('app','reports')">📄 Export PDF Security Report</button>
+            </div>
+          </div>
+
+          <div class="grid-4" style="margin-bottom:20px">
+            <div class="kpi-card">
+              <div class="kpi-lbl">AI Security Posture</div>
+              <div class="kpi-val" style="color:${score>=80?'var(--green)':'var(--amber)'}">${score}<span style="font-size:15px;color:var(--muted)">/100</span></div>
+              <div class="kpi-sub">Aligned to NIST CSF 2.0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-lbl">Managed Employees</div>
+              <div class="kpi-val">${S.employees.length}<span style="font-size:14px;color:var(--muted)"> / ${S.org.seatLimit}</span></div>
+              <div class="kpi-sub">${S.employees.filter(e=>e.policySigned).length} signed AI Policy</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-lbl">Approved AI Tools</div>
+              <div class="kpi-val" style="color:var(--cyan)">${approvedCount}</div>
+              <div class="kpi-sub">${S.aiTools.length - approvedCount} Shadow/Restricted blocked</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-lbl">Active Risk Alerts</div>
+              <div class="kpi-val" style="color:${openAlerts>0?'var(--amber)':'var(--green)'}">${openAlerts}</div>
+              <div class="kpi-sub">Click Security Alerts to triage</div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom:20px">
+            <div class="card">
+              <h3>📈 6-Month AI Posture &amp; Training Trend</h3>
+              <p style="font-size:12px;margin-bottom:14px">Posture progression as policy sign-offs and DLP pre-checks roll out across staff:</p>
+              <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;height:130px;padding-top:14px">
+                ${[['Jun',48],['Jul',56],['Aug',64],['Sep',71],['Oct',78],['Nov',score]].map(([m,v]) => `
+                  <div style="text-align:center">
+                    <div style="font-size:11px;font-weight:800;color:var(--cyan);margin-bottom:4px">${v}</div>
+                    <div style="height:${v}px;background:linear-gradient(180deg,#38bdf8,#1d4ed8);border-radius:6px 6px 2px 2px"></div>
+                    <div style="font-size:10.5px;color:var(--muted);margin-top:5px">${m}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <h3 style="margin:0">🚨 Recent Security Events</h3>
+                <button class="btn btn-sm" onclick="setMode('app','alerts')">View All</button>
+              </div>
+              ${S.alerts.slice(0, 3).map(a => `
+                <div style="padding:10px;border-radius:10px;background:var(--bg-elev);border:1px solid var(--border);margin-bottom:8px">
+                  <div style="display:flex;justify-content:space-between;gap:6px;align-items:center">
+                    <span class="tag ${a.severity==='Critical'?'tag-crit':(a.severity==='High'?'tag-high':'tag-med')}">${a.severity}</span>
+                    <span class="tag tag-sim">${a.source}</span>
+                  </div>
+                  <div style="font-weight:700;font-size:13px;margin-top:6px">${a.title}</div>
+                  <div style="font-size:11.5px;color:var(--muted);margin-top:2px">${a.time} • Status: ${a.status}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'dlp') {
+        return `
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:900">🔍 Live AI Prompt DLP Scanner &amp; Policy Guard</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">
+            Working Feature: Paste any draft ChatGPT or Copilot prompt below before submitting it externally. Cyber Sentinel scans locally in your browser for SSNs/EINs, payment cards, client contact PII, secret keys, and internal construction bid margins — redacting sensitive values in 1 click.
+          </p>
+          <div class="card card-featured" style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+              <label class="lbl" style="margin:0">Employee Draft AI Prompt Pre-Check</label>
+              <button class="btn btn-sm" onclick="loadSampleRiskyPrompt()">⚡ Load Sample Construction Bid Prompt</button>
+            </div>
+            <textarea class="txt" id="dlpInput" rows="5" placeholder="Paste text, email draft, or contract snippet here to check for confidential company/client data..."></textarea>
+            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="runLiveDlpScan()">🛡️ Scan &amp; Redact Sensitive Data</button>
+              <button class="btn" onclick="document.getElementById('dlpInput').value='';document.getElementById('dlpResultBox').innerHTML=''">Clear</button>
+            </div>
+            <div id="dlpResultBox" style="margin-top:14px"></div>
+          </div>
+
+          <div class="card">
+            <h3>📜 Active Company AI Security Policy Controls (${S.org.policyVersion})</h3>
+            <p style="margin-bottom:12px">Administrators can toggle which data categories trigger pre-submission warnings and policy alerts:</p>
+            <div class="grid-2">
+              ${[
+                ['blockSsnTaxId', 'Block Social Security Numbers (SSN) & Federal EINs'],
+                ['blockBidMargins', 'Block Internal Construction Bid Margins, Markups & Sub Quotes'],
+                ['blockClientPii', 'Redact Customer / Homeowner Direct Emails & Phone Numbers'],
+                ['blockBankRouting', 'Block Payment Card, ACH & Financial Account Numbers'],
+                ['blockSourceSecrets', 'Block API Keys, Tokens & System Passwords']
+              ].map(([k, lbl]) => `
+                <label style="display:flex;align-items:center;gap:9px;padding:10px;background:var(--bg-elev);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600">
+                  <input type="checkbox" ${S.policyRules[k] ? 'checked' : ''} onchange="S.policyRules['${k}']=this.checked;saveState()" />
+                  <span>${lbl}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'tools') {
+        return `
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:900">🤖 AI Application Governance &amp; Permissioned Integrations</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">
+            Establish clear Approved vs. Restricted AI platforms for your workforce. Cyber Sentinel uses transparent, permission-based governance — never covert employee keylogging.
+          </p>
+          <div class="card" style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr><th>AI Platform</th><th>Category</th><th>Governance Mode</th><th>Active Staff</th><th>Policy Status</th><th>Admin Action</th></tr>
+              </thead>
+              <tbody>
+                ${S.aiTools.map(t => `
+                  <tr>
+                    <td><strong>${t.name}</strong><div style="font-size:11px;color:var(--muted)">${t.vendor}</div></td>
+                    <td>${t.category}</td>
+                    <td style="font-size:12px;color:#cbd5e1">${t.conn}</td>
+                    <td>${t.users}</td>
+                    <td><span class="tag ${t.status==='Approved'?'tag-ok':'tag-crit'}">${t.status}</span></td>
+                    <td><button class="btn btn-sm" onclick="toggleToolStatus('${t.id}')">Set ${t.status==='Approved'?'Restricted':'Approved'}</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'alerts') {
+        return `
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:900">🚨 Security Alerts &amp; Remediation Console</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">
+            Review detected policy events alongside clearly labeled baseline simulations. Every alert includes plain-English root cause analysis and recommended remediation.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${S.alerts.map(a => `
+              <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <span class="tag ${a.severity==='Critical'?'tag-crit':(a.severity==='High'?'tag-high':'tag-med')}">${a.severity}</span>
+                    <span class="tag ${a.source.includes('Live')?'tag-ok':'tag-sim'}">${a.source}</span>
+                    <span style="font-size:12px;color:var(--muted)">${a.id} • ${a.time}</span>
+                  </div>
+                  <span class="tag ${a.status==='Resolved'?'tag-ok':'tag-med'}">Status: ${a.status}</span>
+                </div>
+                <h3 style="margin:10px 0 6px">${a.title}</h3>
+                <p>${a.detail}</p>
+                <div style="margin-top:10px;padding:10px;background:var(--bg-elev);border-radius:9px;font-size:12.5px;color:#bae6fd">
+                  <strong>Recommended Action:</strong> ${a.action}
+                </div>
+                <div style="margin-top:10px;display:flex;gap:8px">
+                  ${a.status !== 'Acknowledged' && a.status !== 'Resolved' ? `<button class="btn btn-sm" onclick="updateAlertStatus('${a.id}','Acknowledged')">Acknowledge</button>` : ''}
+                  ${a.status !== 'Resolved' ? `<button class="btn btn-sm btn-primary" onclick="updateAlertStatus('${a.id}','Resolved')">✓ Mark Resolved</button>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'assessment') {
+        const questions = [
+          'Written Company AI Acceptable Use Policy distributed to all employees',
+          'Commercial zero-data-retention AI workspaces (Copilot Commercial / ChatGPT Team) separated from personal accounts',
+          'Phishing-resistant Multi-Factor Authentication (MFA) enforced on Microsoft 365 / Google Workspace & email',
+          'Endpoint Detection & Response (EDR) active on all office desktops and field laptops',
+          'Sensitive bid margins, client SSNs, and contracts prohibited from public AI tools',
+          'Dual-verification callback protocol in place before any vendor ACH / wire routing change',
+          'Automated offsite encrypted backups tested for ransomware recovery within 90 days',
+          'Role-Based Access Control (RBAC) limiting financial & HR folders to authorized personnel',
+          'Shadow AI browser extensions audited across company browsers',
+          'Quarterly employee AI & phishing awareness training completed'
+        ];
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+            <div>
+              <h2 style="margin:0;font-size:22px;font-weight:900">📋 NIST CSF 2.0 &amp; AI Security Risk Assessment</h2>
+              <div style="font-size:13px;color:var(--muted)">Evaluate your 10 core SMB controls — Current Assessment Score: <strong style="color:var(--cyan)">${S.assessmentScore}/100</strong></div>
+            </div>
+            <button class="btn btn-primary btn-sm no-print" onclick="setMode('app','reports')">Generate Printable PDF Report →</button>
+          </div>
+          <div class="card">
+            ${questions.map((q, i) => `
+              <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 4px;border-bottom:1px solid rgba(148,163,184,0.1);cursor:pointer">
+                <div style="display:flex;align-items:center;gap:10px;font-size:13.5px">
+                  <input type="checkbox" ${S.assessmentAnswers[i] ? 'checked' : ''} onchange="toggleAssessQ(${i})" />
+                  <span>${i + 1}. ${q}</span>
+                </div>
+                <span class="tag ${S.assessmentAnswers[i] ? 'tag-ok' : 'tag-high'}">${S.assessmentAnswers[i] ? 'Compliant' : 'Gap Identified'}</span>
+              </label>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'employees') {
+        const lessons = [
+          { t: 'Lesson 1: Safe AI Productivity at Work', d: 'How commercial zero-training AI accounts differ from free consumer chatbots.' },
+          { t: 'Lesson 2: What Never to Paste into AI', d: 'Protecting SSNs, bank routing numbers, construction bid markups, and client contracts.' },
+          { t: 'Lesson 3: Spotting AI Voice & Wire-Transfer Scams', d: 'Verifying subcontractor and title-company ACH changes via known callback numbers.' },
+          { t: 'Lesson 4: Avoiding Shadow AI Browser Plugins', d: 'Why free meeting recorders and PDF extensions can expose company email inboxes.' },
+          { t: 'Lesson 5: Acknowledging Your Company AI Policy', d: 'Final 3-point check & digital employee policy sign-off.' }
+        ];
+        return `
+          <h2 style="margin:0 0 14px;font-size:22px;font-weight:900">👥 Employee Management &amp; AI Security Training Academy</h2>
+          <div class="grid-2" style="margin-bottom:20px">
+            <div class="card">
+              <h3>Invite Team Member (RBAC)</h3>
+              <form onsubmit="addEmployee(event)" style="margin-top:12px;display:flex;flex-direction:column;gap:9px">
+                <input class="inp" id="empName" required placeholder="Employee Full Name" />
+                <input class="inp" type="email" id="empEmail" required placeholder="work@company.com" />
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <select class="sel" id="empRole"><option>Estimator</option><option>Project Manager</option><option>Field Staff</option><option>Accounting</option><option>Org Admin</option></select>
+                  <input class="inp" id="empDept" placeholder="Department (e.g. Estimating)" />
+                </div>
+                <button class="btn btn-primary" type="submit">+ Invite Employee &amp; Send AI Policy</button>
+              </form>
+            </div>
+
+            <div class="card card-featured">
+              <h3>🎓 5-Minute Employee AI Safety Micro-Lessons</h3>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+                ${lessons.map((l, idx) => `
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-elev);border-radius:9px;border:1px solid var(--border)">
+                    <div>
+                      <div style="font-size:12.5px;font-weight:700">${l.t}</div>
+                      <div style="font-size:11px;color:var(--muted)">${l.d}</div>
+                    </div>
+                    <button class="btn btn-sm ${S.lessonsCompleted[idx]?'':'btn-primary'}" onclick="completeLesson(${idx})">
+                      ${S.lessonsCompleted[idx] ? '✓ Done' : 'Complete'}
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="overflow-x:auto">
+            <h3>Organization Roster (${S.employees.length} / ${S.org.seatLimit} Seats)</h3>
+            <table class="tbl" style="margin-top:8px">
+              <thead><tr><th>Name</th><th>Role / Dept</th><th>AI Policy Sign-Off</th><th>Training Progress</th></tr></thead>
+              <tbody>
+                ${S.employees.map(e => `
+                  <tr>
+                    <td><strong>${e.name}</strong><div style="font-size:11px;color:var(--muted)">${e.email}</div></td>
+                    <td>${e.role} • ${e.dept}</td>
+                    <td><span class="tag ${e.policySigned?'tag-ok':'tag-high'}">${e.policySigned?'Signed':'Pending'}</span></td>
+                    <td><strong>${e.trainingPct}%</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'reports') {
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px" class="no-print">
+            <h2 style="margin:0;font-size:22px;font-weight:900">📄 Executive Monthly AI &amp; Cyber Posture Report</h2>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Download / Print Executive PDF Report</button>
+          </div>
+          <div class="card" style="padding:28px">
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+              <div>
+                <div style="font-size:20px;font-weight:900">🛡️ CYBER SENTINEL — EXECUTIVE SECURITY SUMMARY</div>
+                <div style="font-size:12.5px;color:var(--muted)">Prepared for: <strong>${S.org.name}</strong> • Generated ${new Date().toLocaleDateString()}</div>
+              </div>
+              <div style="text-align:right;font-size:12px;color:var(--muted)">
+                Cyber Sentinel HQ • 29610 Southfield Rd, Southfield, MI 48076<br/>(248) 996-1779
+              </div>
+            </div>
+            <div class="grid-3" style="margin-bottom:18px">
+              <div class="kpi-card"><div class="kpi-lbl">Overall Posture Score</div><div class="kpi-val">${score}/100</div></div>
+              <div class="kpi-card"><div class="kpi-lbl">NIST Risk Control Score</div><div class="kpi-val">${S.assessmentScore}/100</div></div>
+              <div class="kpi-card"><div class="kpi-lbl">Policy Sign-Off Rate</div><div class="kpi-val">${Math.round((S.employees.filter(e=>e.policySigned).length/S.employees.length)*100)}%</div></div>
+            </div>
+            <h3>Key Priority Recommendations</h3>
+            <ul style="font-size:13.5px;color:#cbd5e1;line-height:1.7">
+              <li>Complete AI Acceptable Use Policy sign-offs for remaining ${S.employees.filter(e=>!e.policySigned).length} team member(s).</li>
+              <li>Mandate Cyber Sentinel DLP Pre-Check scanning before estimators or staff paste client/bid documents into external LLMs.</li>
+              <li>Close remaining ${S.assessmentAnswers.filter(x=>!x).length} NIST CSF 2.0 control gap(s) identified in the Risk Assessment module.</li>
+            </ul>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'billing') {
+        return `
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:900">💳 Subscription &amp; Stripe Billing Management</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">
+            Current Active Plan: <strong style="color:var(--cyan)">${S.org.plan} — $${S.org.price}/month</strong> (Up to ${S.org.seatLimit} employees). Payment card credentials are tokenized exclusively via Stripe Checkout — zero card numbers are ever stored in Cyber Sentinel.
+          </p>
+          <div class="grid-3" style="margin-bottom:20px">
+            ${[
+              { name: 'Starter', price: 99, seats: 10, desc: 'Up to 10 employees • Policies & Monthly Report' },
+              { name: 'Business', price: 249, seats: 50, desc: 'Up to 50 employees • Full Dashboard, DLP & Training' },
+              { name: 'Enterprise', price: 499, seats: 250, desc: 'Up to 250 employees • Custom Policies & vCISO Support' }
+            ].map(pl => `
+              <div class="card ${S.org.plan===pl.name?'card-featured':''}">
+                <h3>${pl.name} — $${pl.price}/mo</h3>
+                <p style="margin-bottom:14px">${pl.desc}</p>
+                <button class="btn ${S.org.plan===pl.name?'':'btn-primary'} btn-sm" style="width:100%"
+                  onclick="S.org.plan='${pl.name}';S.org.price=${pl.price};S.org.seatLimit=${pl.seats};saveState();render()">
+                  ${S.org.plan===pl.name ? '✓ Current Active Plan' : 'Switch to ' + pl.name}
+                </button>
+              </div>
+            `).join('')}
+          </div>
+          <div class="card">
+            <h3>Billing History</h3>
+            <table class="tbl">
+              <thead><tr><th>Invoice</th><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>INV-2026-1101</td><td>Nov 1, 2026</td><td>${S.org.plan} Monthly</td><td>$${S.org.price}.00</td><td><span class="tag tag-ok">Paid (Stripe Demo)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (S.appTab === 'superadmin') {
+        const mrr = S.tenants.reduce((acc, t) => acc + (t.plan.includes('499') ? 499 : (t.plan.includes('249') ? 249 : 99)), 0);
+        return `
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:900">🏛️ Cyber Sentinel — Founder Multi-Tenant Control Panel</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">
+            Role-Based Super-Admin View (Jordan Culliver) • Strict tenant data isolation enforced across customer organizations.
+          </p>
+          <div class="grid-4" style="margin-bottom:20px">
+            <div class="kpi-card"><div class="kpi-lbl">Customer Organizations</div><div class="kpi-val">${S.tenants.length}</div></div>
+            <div class="kpi-card"><div class="kpi-lbl">Platform MRR (Pilot)</div><div class="kpi-val" style="color:var(--green)">$${mrr.toLocaleString()}</div></div>
+            <div class="kpi-card"><div class="kpi-lbl">Inbound Demo Requests</div><div class="kpi-val" style="color:var(--cyan)">${S.demoLeads.length}</div></div>
+            <div class="kpi-card"><div class="kpi-lbl">API &amp; DB Health</div><div class="kpi-val" style="color:var(--green)">99.98%</div></div>
+          </div>
+          <div class="card" style="overflow-x:auto;margin-bottom:18px">
+            <h3>Multi-Tenant Organization Directory</h3>
+            <table class="tbl">
+              <thead><tr><th>Tenant ID</th><th>Organization</th><th>Industry</th><th>Seats</th><th>Subscription</th><th>Posture</th><th>Status</th></tr></thead>
+              <tbody>
+                ${S.tenants.map(t => `
+                  <tr>
+                    <td>${t.id}</td><td><strong>${t.name}</strong></td><td>${t.industry}</td>
+                    <td>${t.employees}</td><td>${t.plan}</td><td><strong>${t.score}/100</strong></td>
+                    <td><span class="tag tag-ok">${t.status}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Recent Demo &amp; Consultation Inquiries (${S.demoLeads.length})</h3>
+            ${S.demoLeads.length ? S.demoLeads.map(l => `
+              <div style="padding:10px;background:var(--bg-elev);border-radius:9px;margin-top:8px;font-size:13px">
+                <strong>${l.company}</strong> — ${l.name} (${l.phone} • ${l.email}) • ${l.employees}<br/>
+                <span style="color:var(--muted)">${l.notes || 'Requested live demo'} (${l.ts})</span>
+              </div>
+            `).join('') : '<p style="margin-top:6px">Submit the Contact / Request a Demo form on the public site to see live inbound leads land here instantly.</p>'}
+          </div>
+        `;
+      }
+      return '';
+    }
+
+    function renderAppShell() {
+      const isSuper = S.session?.role === 'super_admin';
+      const isEmp = S.session?.role === 'employee';
+      const tabs = [
+        { id: 'overview', lbl: '📊 Posture Overview', show: !isEmp },
+        { id: 'dlp', lbl: '🔍 AI Prompt DLP Guard', show: true },
+        { id: 'tools', lbl: '🤖 AI Tool Governance', show: !isEmp },
+        { id: 'alerts', lbl: '🚨 Security Alerts', show: !isEmp },
+        { id: 'assessment', lbl: '📋 NIST Risk Audit', show: !isEmp },
+        { id: 'employees', lbl: '🎓 Team & AI Training', show: true },
+        { id: 'reports', lbl: '📄 PDF Security Reports', show: !isEmp },
+        { id: 'billing', lbl: '💳 Plans & Billing', show: !isEmp },
+        { id: 'superadmin', lbl: '🏛️ Founder Admin Panel', show: isSuper }
+      ].filter(x => x.show);
+
+      return `
+        <div class="app-layout">
+          <aside class="app-sidebar">
+            <div class="sb-group-lbl">${S.org.name}</div>
+            ${tabs.map(t => `
+              <button class="app-nav-btn ${S.appTab===t.id?'active':''}" onclick="setMode('app','${t.id}')">
+                <span>${t.lbl}</span>
+              </button>
+            `).join('')}
+          </aside>
+          <main class="app-main">${renderAppContent()}</main>
+        </div>
+      `;
+    }
+
+    function render() {
+      renderNav();
+      const vp = document.getElementById('viewport');
+      if (S.mode === 'app') {
+        vp.innerHTML = renderAppShell();
+      } else {
+        if (S.sitePage === 'solutions') vp.innerHTML = renderSolutionsPage();
+        else if (S.sitePage === 'pricing') vp.innerHTML = `<section class="section">${renderPricingSection()}</section>${renderFooter()}`;
+        else if (S.sitePage === 'about') vp.innerHTML = renderAboutPage();
+        else if (S.sitePage === 'contact') vp.innerHTML = renderContactPage();
+        else vp.innerHTML = renderHomePage();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
